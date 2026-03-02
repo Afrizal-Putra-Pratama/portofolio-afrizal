@@ -29,12 +29,18 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("portfolio-lang", newLang);
   };
 
-  // Kunci Perbaikan: Provider kini SELALU membungkus children dalam kondisi apapun,
-  // sehingga error "must be used within a LanguageProvider" tidak akan pernah terjadi.
+  // Kunci Perbaikan: Tambahkan 'as typeof dictionary.id' pada objek 't' 
+  // untuk memberi tahu TypeScript bahwa strukturnya aman.
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage, t: dictionary[language] }}>
-      {children}
-    </LanguageContext.Provider>
+    <LanguageContext.Provider 
+  value={{ 
+    language, 
+    toggleLanguage, 
+    t: dictionary[language] as typeof dictionary.id // Tambahkan 'as typeof' di sini
+  }}
+>
+  {children}
+</LanguageContext.Provider>
   );
 }
 

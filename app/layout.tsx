@@ -7,8 +7,8 @@ import { LanguageProvider } from "../src/components/LanguageProvider"; // Tambah
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Afrizal | UI/UX Designer & Frontend Developer",
-  description: "Portofolio profesional Afrizal. Merancang antarmuka digital yang intuitif dan mengembangkannya menjadi produk fungsional dengan performa tinggi.",
+  title: "Afrizal | UI/UX Designer & Frontend Enthusiast",
+  description: "Portofolio profesional Afrizal 2026.",
 };
 
 export default function RootLayout({

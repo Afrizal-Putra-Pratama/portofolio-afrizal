@@ -1,0 +1,9 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    path { stroke: #18181B; } /* Warna hitam (zinc-900) untuk Light Mode */
+    @media (prefers-color-scheme: dark) {
+      path { stroke: #FFFFFF; } /* Warna putih murni untuk Dark Mode */
+    }
+  </style>
+  <path d="M6 20L12 4L18 20 M8 14H16" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

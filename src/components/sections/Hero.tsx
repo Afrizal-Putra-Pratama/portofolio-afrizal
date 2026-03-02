@@ -127,7 +127,7 @@ export default function Hero() {
             >
               <div className="relative w-full aspect-[4/5] rounded-[1.8rem] overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800">
                 <Image 
-                  src="/images/profile-transparent.png" 
+                  src="/images/profile.jpg" 
                   alt="Afrizal"
                   fill
                   className="object-cover object-top transition-transform duration-700 group-hover:scale-110"

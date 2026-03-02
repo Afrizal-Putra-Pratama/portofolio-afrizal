@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  devIndicators: {
+    // Kita hanya bisa mengatur posisi indikator di versi terbaru
+    position: "top-right",
+  },
 };
 
 export default nextConfig;
