@@ -9,10 +9,10 @@ import { useLanguage } from "../LanguageProvider";
 
 // Berisi 4 gambar sesuai jumlah proyek di dictionary terbaru
 const projectImages = [
-  "/images/projects/project-1.jpg", 
-  "/images/projects/project-2.jpg", 
-  "/images/projects/project-3.jpg", 
-  "/images/projects/project-4.jpg", 
+  "/images/projects/adsa.jpg", 
+  "/images/projects/posturely.jpg", 
+  "/images/projects/shesafe.jpg", 
+  "/images/projects/sdit.jpg", 
 ];
 
 const getTechIcon = (tech: string) => {
