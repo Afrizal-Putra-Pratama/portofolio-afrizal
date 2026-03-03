@@ -70,20 +70,16 @@ export const dictionary = {
         { title: "AdsaWonokerso", category: "Full Stack Development • Skripsi", description: "Digitalisasi sistem pengaduan desa menjadi platform terintegrasi. Dibangun dari nol dengan arsitektur end-to-end dan implementasi Firebase Cloud Messaging (FCM) untuk notifikasi real-time.", tech: ["Laravel", "Firebase FCM", "MySQL"] },
         { title: "Posturely", category: "AI Integration • YISF Int. Competition", description: "Sistem analisis postur tubuh untuk anak-anak. Mengintegrasikan model AI Mediapipe ke dalam ekosistem React dan Laravel untuk deteksi presisi.", tech: ["React", "Laravel", "Python", "Mediapipe"] },
         { title: "SheSafe", category: "UI/UX Design • Women Protection", description: "Merancang antarmuka untuk aplikasi perlindungan perempuan dalam kondisi bahaya. Berfokus pada aksesibilitas fitur darurat yang cepat, responsif, dan intuitif.", tech: ["Figma", "User Research", "Wireframing"] },
-        { title: "Signargi", category: "UI/UX Design • Accessibility", description: "Perancangan UI/UX aplikasi konversi bahasa isyarat untuk memfasilitasi komunikasi inklusif. Menekankan pada pengalaman pengguna yang ramah bagi penyandang disabilitas.", tech: ["Figma", "Prototyping", "Design System"] },
-        { title: "Platipus", category: "UI/UX Design • Digital Platform", description: "Perancangan antarmuka untuk platform digital yang menghubungkan penyelenggara acara (event organizer) dengan sponsor potensial secara efisien.", tech: ["Figma", "Design System", "Prototyping"] },
         { title: "SDIT Financial", category: "UI/UX Design • Dashboard", description: "Modernisasi antarmuka sistem manajemen keuangan untuk SDIT Muhammadiyah Al Kautsar, dirancang khusus untuk mempermudah pencatatan dan rekapitulasi data sekolah.", tech: ["Figma", "Wireframing", "UI Component"] }
       ]
     },
     techStack: {
-      title: "Senjata Utama", // "Primary Arsenal" untuk versi en
+      title: "Senjata Utama", 
       subtitle: "Teknologi dan perangkat yang saya gunakan untuk mewujudkan solusi digital.",
       categories: [
         { title: "UI/UX & Prototyping", skills: ["Figma", "Design Systems", "User Research", "Wireframing", "High-Fidelity Prototyping"] },
         { title: "Frontend Ecosystem", skills: ["React", "Next.js", "Tailwind CSS", "Framer Motion", "Shadcn UI", "Aceternity"] },
-        // Node.js dihapus dari sini
         { title: "Backend & Database", skills: ["PHP", "Laravel", "MySQL", "Firebase (FCM)"] },
-        // Tambahan Vercel, Postman, dan 
         { title: "Tools & Lainnya", skills: ["Git", "Vercel", "VPS Deployment", "Postman", "Python", "Mediapipe"] }
       ]
     },
@@ -92,6 +88,8 @@ export const dictionary = {
       subtitle: "Daftar lengkap proyek pendukung, eksplorasi desain, dan partisipasi kompetisi.",
       headers: { project: "Proyek", role: "Peran", category: "Kategori", link: "Tautan" },
       items: [
+        { project: "Signargi", role: "UI/UX Designer", category: "Aplikasi Aksesibilitas" },
+        { project: "Platipus", role: "UI/UX Designer", category: "Platform Digital" },
         { project: "Satern (Aplikasi Riset Sawit)", role: "UI Designer", category: "Kompetisi Nasional" },
         { project: "EcoAction", role: "UI Designer", category: "Platform Donasi Lingkungan" },
         { project: "Girantra", role: "UI Designer", category: "Dinacom Nasional" },
@@ -106,8 +104,8 @@ export const dictionary = {
     },
     footer: { 
       description: "Merancang dan membangun pengalaman digital berkualitas.", 
-      copyright: "Hak Cipta Dilindungi.", 
-      builtWith: "Dibuat dengan Next.js, Tailwind CSS & Framer Motion" 
+      copyright: "Dirancang & dibangun dengan passion.", 
+      builtWith: "" 
     }
   },
   en: {
@@ -181,8 +179,6 @@ export const dictionary = {
         { title: "AdsaWonokerso", category: "Full Stack Development • Thesis", description: "Digitalization of the village complaint system into an integrated platform. Built from scratch with end-to-end architecture and implementation of Firebase Cloud Messaging (FCM) for real-time notifications.", tech: ["Laravel", "Firebase FCM", "MySQL"] },
         { title: "Posturely", category: "AI Integration • YISF Int. Competition", description: "Body posture analysis system for children. Integrated Mediapipe AI model into React and Laravel ecosystems for precise detection.", tech: ["React", "Laravel", "Python", "Mediapipe"] },
         { title: "SheSafe", category: "UI/UX Design • Women Protection", description: "Designed interfaces for a women's protection app in dangerous situations. Focused on quick, responsive, and intuitive emergency accessibility.", tech: ["Figma", "User Research", "Wireframing"] },
-        { title: "Signargi", category: "UI/UX Design • Accessibility", description: "UI/UX design of a sign language conversion app to facilitate inclusive communication. Emphasized a disability-friendly user experience.", tech: ["Figma", "Prototyping", "Design System"] },
-        { title: "Platipus", category: "UI/UX Design • Digital Platform", description: "Interface design for a digital platform that efficiently connects event organizers with potential sponsors.", tech: ["Figma", "Design System", "Prototyping"] },
         { title: "SDIT Financial", category: "UI/UX Design • Dashboard", description: "Modernization of the financial management system interface for SDIT Muhammadiyah Al Kautsar, specifically designed to facilitate school data recording and recapitulation.", tech: ["Figma", "Wireframing", "UI Component"] }
       ]
     },
@@ -201,22 +197,24 @@ export const dictionary = {
       subtitle: "A complete list of projects, design explorations, and other competitions.",
       headers: { year: "Year", project: "Project", role: "Role", category: "Category" },
       items: [
-        {project: "Satern (Palm Oil Research App)", role: "UI Designer", category: "National Competition" },
-        {project: "EcoAction", role: "UI Designer", category: "Environmental Donation Platform" },
-        {project: "Girantra", role: "UI Designer", category: "Dinacom National" },
-        {project: "Toko Bu Hartono", role: "UI Designer", category: "Internship (Landing Page & System)" },
-        {project: "Parky (UMS Parking System)", role: "UI Designer", category: "Final Course Project" },
-        {project: "Quran Qolbu", role: "UI Designer", category: "Religious App" },
-        {project: "MyPresensi UMS", role: "UI/UX Designer", category: "Conceptual Redesign" },
-        {project: "Capcut App", role: "UI/UX Designer", category: "Conceptual Redesign" },
-        {project: "Overcontent", role: "Visual Designer", category: "Instagram Content Design" },
-        {project: "Dewave", role: "Visual Designer", category: "Visual Identity (ID Card)" }
+        { project: "Signargi", role: "UI/UX Designer", category: "Accessibility App" },
+        { project: "Platipus", role: "UI/UX Designer", category: "Digital Platform" },
+        { project: "Satern (Palm Oil Research App)", role: "UI Designer", category: "National Competition" },
+        { project: "EcoAction", role: "UI Designer", category: "Environmental Donation Platform" },
+        { project: "Girantra", role: "UI Designer", category: "Dinacom National" },
+        { project: "Toko Bu Hartono", role: "UI Designer", category: "Internship (Landing Page & System)" },
+        { project: "Parky (UMS Parking System)", role: "UI Designer", category: "Final Course Project" },
+        { project: "Quran Qolbu", role: "UI Designer", category: "Religious App" },
+        { project: "MyPresensi UMS", role: "UI/UX Designer", category: "Conceptual Redesign" },
+        { project: "Capcut App", role: "UI/UX Designer", category: "Conceptual Redesign" },
+        { project: "Overcontent", role: "Visual Designer", category: "Instagram Content Design" },
+        { project: "Dewave", role: "Visual Designer", category: "Visual Identity (ID Card)" }
       ]
     },
     footer: { 
       description: "Designing and building high-quality digital experiences.", 
-      copyright: "All Rights Reserved.", 
-      builtWith: "Built with Next.js, Tailwind CSS & Framer Motion" 
+      copyright: "Designed & built with passion.", 
+      builtWith: "" 
     }
   }
 };
