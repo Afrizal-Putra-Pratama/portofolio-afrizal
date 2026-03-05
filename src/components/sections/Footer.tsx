@@ -74,16 +74,16 @@ export default function Footer() {
               <MapPin className="w-3 h-3 md:w-3.5 md:h-3.5" /> Surakarta, Indonesia
             </div>
             <p className="text-zinc-400 dark:text-zinc-500 text-[9px] md:text-[10px] font-medium">
-              &copy; {new Date().getFullYear()} Afrizal. {language === "id" ? "Dirancang & dibangun dengan passion." : "Designed & built with passion."}
+              &copy; {new Date().getFullYear()} Afrizal. {language === "id" ? "mari membuat sesuatu yang luar biasa." : "let's make something amazing."}
             </p>
           </div>
 
           {/* Kanan: Social Links (Elegan & Lebih Kecil) */}
           <div className="flex gap-2">
             {[
-              { icon: Linkedin, link: "#" },
-              { icon: Github, link: "#" },
-              { icon: Instagram, link: "#" },
+              { icon: Linkedin, link: "https://www.linkedin.com/in/afrizal-putra-pratama-24678128b/" },
+              { icon: Github, link: "https://github.com/Afrizal-Putra-Pratama" },
+              { icon: Instagram, link: "https://www.instagram.com/afzapp" },
             ].map((social, index) => (
               <a 
                 key={index} 

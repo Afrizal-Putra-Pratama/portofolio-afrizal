@@ -7,12 +7,31 @@ import { ExternalLink, Github, X, ArrowRight, LayoutTemplate, Users, Layers, Act
 import { SiReact, SiLaravel, SiPython, SiFigma, SiMysql, SiFirebase } from "react-icons/si";
 import { useLanguage } from "../LanguageProvider";
 
-// Berisi 4 gambar sesuai jumlah proyek di dictionary terbaru
 const projectImages = [
   "/images/projects/adsa.jpg", 
   "/images/projects/posturely.jpg", 
   "/images/projects/shesafe.jpg", 
   "/images/projects/sdit.jpg", 
+];
+
+
+const projectLinks = [
+  { 
+    github: "https://github.com/Afrizal-Putra-Pratama/AdsaWonokerso",
+    demo: "https://adsawonokerso.my.id/"
+  },
+  { 
+    github: "https://github.com/Afrizal-Putra-Pratama/kidposture-web",
+    demo: null 
+  },
+  { 
+    github: null, 
+    demo: "https://www.figma.com/proto/NS5Wdu1jaGIMa3MlFgfdhu/Gemastik--25?node-id=1-3&t=jQYEaUOYT7ANoqCD-1"
+  },
+  { 
+    github: null,
+    demo: "https://www.figma.com/proto/RxqHfsDjv58RuoFAbJsi0Q/Overlogic-SDIT-Project---Overlogic-Universe?node-id=108-2&t=XkVpg8YObXNnHZdO-1"
+  }
 ];
 
 const getTechIcon = (tech: string) => {
@@ -31,7 +50,7 @@ const getTechIcon = (tech: string) => {
 };
 
 export default function Projects() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
 
@@ -83,7 +102,7 @@ export default function Projects() {
         </motion.div>
 
         {/* =========================================
-            TAMPILAN DESKTOP: Typography Hover Reveal (Ukuran Normal)
+            TAMPILAN DESKTOP: Typography Hover Reveal
             ========================================= */}
         <div className="hidden md:flex flex-col w-full border-t border-zinc-200 dark:border-zinc-800">
           {t.projects.items.map((project, index) => (
@@ -155,7 +174,7 @@ export default function Projects() {
       </div>
 
       {/* =========================================
-          FLOATING IMAGE KURSOR (Ukuran Disesuaikan)
+          FLOATING IMAGE KURSOR
           ========================================= */}
       <motion.div
         className="fixed top-0 left-0 w-[280px] lg:w-[320px] aspect-[4/3] rounded-xl overflow-hidden pointer-events-none z-50 hidden md:block shadow-2xl border border-white/10"
@@ -253,21 +272,55 @@ export default function Projects() {
                     </div>
                   </div>
 
+                  {/* LOGIKA TOMBOL GITHUB & DEMO */}
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-zinc-200 dark:border-zinc-800">
                     <div className="flex w-full sm:w-auto gap-3 order-2 sm:order-1">
-                      <a href="#" className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-900 dark:text-white font-bold text-sm rounded-xl transition-colors">
-                        <Github className="w-4 h-4" /> Code
-                      </a>
-                      <a href="#" className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-7 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl transition-all shadow-md shadow-blue-600/20">
-                        <ExternalLink className="w-4 h-4" /> Demo
-                      </a>
+                      
+                      {/* Tombol GitHub (Hanya render jika URL-nya ada) */}
+                      {projectLinks[selectedProject % projectLinks.length].github && (
+                        <a 
+                          href={projectLinks[selectedProject % projectLinks.length].github!}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-900 dark:text-white font-bold text-sm rounded-xl transition-colors"
+                        >
+                          <Github className="w-4 h-4" /> Code
+                        </a>
+                      )}
+
+                      {/* Tombol Demo (Menyusul / Link Figma / Live App) */}
+                      {projectLinks[selectedProject % projectLinks.length].demo ? (
+                        <a 
+                          href={projectLinks[selectedProject % projectLinks.length].demo!}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-7 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl transition-all shadow-md shadow-blue-600/20"
+                        >
+                          <ExternalLink className="w-4 h-4" /> Demo
+                        </a>
+                      ) : (
+                        <div className="relative group flex-1 sm:flex-none flex">
+                          <button disabled className="w-full flex items-center justify-center gap-2 px-7 py-3.5 bg-zinc-200 dark:bg-zinc-800/80 text-zinc-400 dark:text-zinc-500 font-bold text-sm rounded-xl cursor-not-allowed transition-colors">
+                            <ExternalLink className="w-4 h-4" /> Demo
+                          </button>
+                          {/* Tooltip Segera Menyusul */}
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-1.5 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl z-10">
+                            {language === "id" ? "Segera Menyusul" : "Coming Soon"}
+                            {/* Panah bawah tooltip */}
+                            <svg className="absolute text-zinc-900 dark:text-white h-2 w-full left-0 top-full" x="0px" y="0px" viewBox="0 0 255 255" xmlSpace="preserve">
+                              <polygon className="fill-current" points="0,0 127.5,127.5 255,0"/>
+                            </svg>
+                          </div>
+                        </div>
+                      )}
+
                     </div>
                     
                     <button 
                       onClick={() => setSelectedProject(null)} 
                       className="w-full sm:w-auto px-6 py-3.5 bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 font-bold text-sm rounded-xl transition-colors order-1 sm:order-2 flex items-center justify-center gap-2"
                     >
-                      Lihat yang lain
+                      Tutup modal
                     </button>
                   </div>
                 </div>

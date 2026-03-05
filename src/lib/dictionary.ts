@@ -70,7 +70,7 @@ export const dictionary = {
         { title: "AdsaWonokerso", category: "Full Stack Development • Skripsi", description: "Digitalisasi sistem pengaduan desa menjadi platform terintegrasi. Dibangun dari nol dengan arsitektur end-to-end dan implementasi Firebase Cloud Messaging (FCM) untuk notifikasi real-time.", tech: ["Laravel", "Firebase FCM", "MySQL"] },
         { title: "Posturely", category: "AI Integration • YISF Int. Competition", description: "Sistem analisis postur tubuh untuk anak-anak. Mengintegrasikan model AI Mediapipe ke dalam ekosistem React dan Laravel untuk deteksi presisi.", tech: ["React", "Laravel", "Python", "Mediapipe"] },
         { title: "SheSafe", category: "UI/UX Design • Women Protection", description: "Merancang antarmuka untuk aplikasi perlindungan perempuan dalam kondisi bahaya. Berfokus pada aksesibilitas fitur darurat yang cepat, responsif, dan intuitif.", tech: ["Figma", "User Research", "Wireframing"] },
-        { title: "SDIT Financial", category: "UI/UX Design • Dashboard", description: "Modernisasi antarmuka sistem manajemen keuangan untuk SDIT Muhammadiyah Al Kautsar, dirancang khusus untuk mempermudah pencatatan dan rekapitulasi data sekolah.", tech: ["Figma", "Wireframing", "UI Component"] }
+        { title: "SDIT Manajemen", category: "UI/UX Design • Dashboard", description: "Modernisasi antarmuka sistem manajemen keuangan untuk SDIT Muhammadiyah Al Kautsar, dirancang khusus untuk mempermudah pencatatan dan rekapitulasi data sekolah.", tech: ["Figma", "Wireframing", "UI Component"] }
       ]
     },
     techStack: {
@@ -179,7 +179,7 @@ export const dictionary = {
         { title: "AdsaWonokerso", category: "Full Stack Development • Thesis", description: "Digitalization of the village complaint system into an integrated platform. Built from scratch with end-to-end architecture and implementation of Firebase Cloud Messaging (FCM) for real-time notifications.", tech: ["Laravel", "Firebase FCM", "MySQL"] },
         { title: "Posturely", category: "AI Integration • YISF Int. Competition", description: "Body posture analysis system for children. Integrated Mediapipe AI model into React and Laravel ecosystems for precise detection.", tech: ["React", "Laravel", "Python", "Mediapipe"] },
         { title: "SheSafe", category: "UI/UX Design • Women Protection", description: "Designed interfaces for a women's protection app in dangerous situations. Focused on quick, responsive, and intuitive emergency accessibility.", tech: ["Figma", "User Research", "Wireframing"] },
-        { title: "SDIT Financial", category: "UI/UX Design • Dashboard", description: "Modernization of the financial management system interface for SDIT Muhammadiyah Al Kautsar, specifically designed to facilitate school data recording and recapitulation.", tech: ["Figma", "Wireframing", "UI Component"] }
+        { title: "SDIT Management", category: "UI/UX Design • Dashboard", description: "Modernization of the financial management system interface for SDIT Muhammadiyah Al Kautsar, specifically designed to facilitate school data recording and recapitulation.", tech: ["Figma", "Wireframing", "UI Component"] }
       ]
     },
     techStack: {
