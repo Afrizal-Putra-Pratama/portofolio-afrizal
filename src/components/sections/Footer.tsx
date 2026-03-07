@@ -52,10 +52,10 @@ export default function Footer() {
 
           {/* Tombol Email (Pill Besar, Sedikit Dirampingkan) */}
           <a 
-            href="mailto:afrizalputtra@gmail.com"
+            href="mailto:afrizzalputrapratama@gmail.com"
             className="group flex items-center gap-2.5 px-6 py-3 md:px-8 md:py-4 bg-blue-600 text-white rounded-full font-black text-xs md:text-sm hover:bg-blue-500 transition-all shadow-[0_0_30px_-10px_rgba(37,99,235,0.5)] hover:shadow-[0_0_50px_-15px_rgba(37,99,235,0.7)] hover:-translate-y-1"
           >
-            afrizalputtra@gmail.com 
+            afrizzalputrapratama@gmail.com 
             <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-blue-600 transition-colors">
               <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4" />
             </div>
@@ -81,9 +81,9 @@ export default function Footer() {
           {/* Kanan: Social Links (Elegan & Lebih Kecil) */}
           <div className="flex gap-2">
             {[
-              { icon: Linkedin, link: "https://www.linkedin.com/in/afrizal-putra-pratama-24678128b/" },
-              { icon: Github, link: "https://github.com/Afrizal-Putra-Pratama" },
-              { icon: Instagram, link: "https://www.instagram.com/afzapp" },
+              { icon: Linkedin, link: "linkedin.com/in/afpupra/" },
+              { icon: Github, link: "github.com/Afrizal-Putra-Pratama" },
+              { icon: Instagram, link: "instagram.com/afzapp" },
             ].map((social, index) => (
               <a 
                 key={index} 
