@@ -53,6 +53,8 @@ export default function Footer() {
           {/* Tombol Email (Pill Besar, Sedikit Dirampingkan) */}
           <a 
             href="mailto:afrizzalputrapratama@gmail.com"
+            target="_blank"
+            rel="noopener noreferrer"
             className="group flex items-center gap-2.5 px-6 py-3 md:px-8 md:py-4 bg-blue-600 text-white rounded-full font-black text-xs md:text-sm hover:bg-blue-500 transition-all shadow-[0_0_30px_-10px_rgba(37,99,235,0.5)] hover:shadow-[0_0_50px_-15px_rgba(37,99,235,0.7)] hover:-translate-y-1"
           >
             afrizzalputrapratama@gmail.com 
@@ -81,13 +83,15 @@ export default function Footer() {
           {/* Kanan: Social Links (Elegan & Lebih Kecil) */}
           <div className="flex gap-2">
             {[
-              { icon: Linkedin, link: "linkedin.com/in/afpupra/" },
-              { icon: Github, link: "github.com/Afrizal-Putra-Pratama" },
-              { icon: Instagram, link: "instagram.com/afzapp" },
+              { icon: Linkedin, link: "https://www.linkedin.com/in/afpupra/" },
+              { icon: Github, link: "https://github.com/Afrizal-Putra-Pratama" },
+              { icon: Instagram, link: "https://www.instagram.com/afzapp" },
             ].map((social, index) => (
               <a 
                 key={index} 
                 href={social.link} 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-blue-600 hover:border-blue-200 dark:hover:border-zinc-600 dark:hover:text-white transition-all shadow-sm hover:shadow-md hover:-translate-y-1"
               >
                 <social.icon className="w-3.5 h-3.5 md:w-4 md:h-4" />
