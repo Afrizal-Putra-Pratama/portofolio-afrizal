@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { Download, X, ExternalLink, FileText } from "lucide-react";
+import { Download, X, ExternalLink } from "lucide-react";
 import { useLanguage } from "../LanguageProvider";
 
 export default function Hero() {
@@ -140,33 +140,33 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* 4. MODAL RESUME */}
+      {/* 4. MODAL RESUME (Gambar Preview A4) */}
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-4">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-black/80 backdrop-blur-md" />
-            <motion.div initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }} className="relative w-full max-w-5xl h-[90vh] md:h-[85vh] bg-white dark:bg-zinc-950 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col border border-zinc-200 dark:border-zinc-800">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-black/80 backdrop-blur-md cursor-pointer" />
+            
+            {/* Lebar modal disesuaikan agar pas dengan rasio A4 (max-w-[750px]) */}
+            <motion.div initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }} className="relative w-full max-w-[750px] h-[90vh] md:h-[85vh] bg-zinc-100 dark:bg-zinc-900 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col border border-zinc-200 dark:border-zinc-800">
               
-              {/* HEADER MODAL - Dioptimalkan untuk Mobile */}
-              <div className="p-4 md:px-10 md:py-6 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center bg-white dark:bg-zinc-900 shrink-0">
+              {/* HEADER MODAL */}
+              <div className="px-5 py-4 md:px-8 md:py-6 border-b border-zinc-200 dark:border-zinc-800 flex justify-between items-center bg-white dark:bg-zinc-950 shrink-0 z-20">
                 <div className="flex flex-col">
-                  {/* Di HP teksnya jadi 'CV', di Desktop jadi 'Curriculum Vitae' */}
-                  <h3 className="font-black text-lg md:text-xl text-zinc-900 dark:text-white uppercase tracking-tighter line-clamp-1">
-                    <span className="md:hidden">CV</span>
+                  <h3 className="font-black text-base md:text-xl text-zinc-900 dark:text-white uppercase tracking-tighter line-clamp-1">
+                    <span className="md:hidden">CV Afri 2026</span>
                     <span className="hidden md:inline">Curriculum Vitae</span>
                   </h3>
-                  <span className="text-[10px] md:text-xs text-zinc-500 font-medium line-clamp-1">Afrizal Putra Pratama</span>
+                  <span className="hidden md:block text-xs text-zinc-500 font-medium mt-1">Afrizal Putra Pratama</span>
                 </div>
                 
-                <div className="flex items-center gap-2 md:gap-3">
+                <div className="flex items-center gap-2 md:gap-4">
                   <a 
                     href="/CV-Afrizal Putra Pratama 2026.pdf" 
                     download="CV-Afrizal Putra Pratama 2026.pdf" 
-                    className="flex items-center gap-1.5 md:gap-2 px-3 py-2.5 md:px-6 md:py-3 bg-blue-600 text-white rounded-xl md:rounded-2xl font-bold text-xs md:text-sm shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all whitespace-nowrap"
+                    className="flex items-center gap-1.5 md:gap-2 px-4 py-2.5 md:px-6 md:py-3 bg-blue-600 text-white rounded-xl md:rounded-2xl font-bold text-xs md:text-sm shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all whitespace-nowrap"
                   >
                     <Download className="w-4 h-4" /> 
-                    {/* Teks Unduh CV hanya muncul di layar yang agak besar, di layar sangat kecil hanya ikon */}
-                    <span className="hidden sm:inline">{language === "id" ? "Unduh CV" : "Download PDF"}</span>
+                    <span className="hidden sm:inline">{language === "id" ? "Unduh PDF" : "Download PDF"}</span>
                   </a>
                   <button onClick={() => setIsModalOpen(false)} className="p-2.5 md:p-3 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-xl md:rounded-2xl transition-colors">
                     <X className="w-5 h-5 md:w-6 md:h-6 text-zinc-600 dark:text-zinc-400" />
@@ -174,33 +174,25 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* BODY MODAL (IFRAME) */}
-              <div className="relative flex-1 bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
+              {/* BODY MODAL (IMAGE PREVIEW) - Padding dirampingkan */}
+              <div className="relative flex-1 bg-zinc-200/50 dark:bg-zinc-950 overflow-y-auto custom-scrollbar p-2 md:p-6 flex justify-center">
                 
-                {/* Fallback Message (Terlihat jika iframe gagal dimuat di HP) */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-0">
-                   <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4 text-blue-600 dark:text-blue-400">
-                     <FileText className="w-8 h-8" />
-                   </div>
-                   <h4 className="text-zinc-900 dark:text-white font-bold text-lg mb-2">
-                     {language === "id" ? "Pratinjau tidak tersedia di perangkat ini." : "Preview not available on this device."}
-                   </h4>
-                   <p className="text-zinc-500 dark:text-zinc-400 text-sm max-w-sm mb-6">
-                     {language === "id" ? "Browser mobile Anda mungkin memblokir tampilan PDF langsung. Silakan unduh file untuk melihatnya." : "Your mobile browser might block direct PDF rendering. Please download the file to view it."}
-                   </p>
-                   {/* Tombol Cadangan jika gagal dimuat */}
-                   <a href="/CV-Afrizal Putra Pratama 2026.pdf" download="CV-Afrizal Putra Pratama 2026.pdf" className="px-6 py-3 bg-blue-600 text-white font-bold text-sm rounded-xl">
-                     {language === "id" ? "Unduh CV Sekarang" : "Download CV Now"}
-                   </a>
+                {/* Kertas CV */}
+                <div className="relative w-full bg-white shadow-md rounded-lg overflow-hidden h-max border border-zinc-200/50">
+                  {/* Aspect ratio 1:1.414 (Standar kertas A4) */}
+                  <div className="relative w-full aspect-[1/1.414]">
+                    <Image 
+                      src="/images/preview.jpg" 
+                      alt="CV Preview" 
+                      fill 
+                      className="object-contain"
+                      sizes="(max-width: 768px) 100vw, 800px"
+                    />
+                  </div>
                 </div>
-
-                {/* IFRAME PDF (Akan menutupi Fallback Message jika berhasil dimuat di Desktop) */}
-                <iframe 
-                  src="/CV-Afrizal Putra Pratama 2026.pdf" 
-                  className="relative z-10 w-full h-full border-none bg-transparent" 
-                  title="Resume" 
-                />
+                
               </div>
+              
             </motion.div>
           </div>
         )}
