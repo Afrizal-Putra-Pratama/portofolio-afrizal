@@ -96,7 +96,6 @@ export default function Hero() {
           </motion.p>
           
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            {/* Tombol diarahkan ke section projects */}
             <a 
               href="#projects" 
               className="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white text-center font-bold rounded-2xl hover:bg-blue-700 transition-all hover:-translate-y-1 active:scale-95"
@@ -169,7 +168,8 @@ export default function Hero() {
                   <span className="text-xs text-zinc-500 font-medium">Afrizal Putra Pratama</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <a href="/resume.pdf" download className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-2xl font-bold text-sm shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all">
+                  {/* Tombol Download sudah diarahkan ke file PDF yang baru */}
+                  <a href="/CV-Afrizal Putra Pratama 2026.pdf" download="CV-Afrizal Putra Pratama 2026.pdf" className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-2xl font-bold text-sm shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all">
                     <Download className="w-4 h-4" /> Download PDF
                   </a>
                   <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-2xl transition-colors">
@@ -178,7 +178,8 @@ export default function Hero() {
                 </div>
               </div>
               <div className="flex-1 bg-zinc-50 dark:bg-zinc-900 overflow-hidden">
-                <iframe src="/resume.pdf" className="w-full h-full border-none" title="Resume" />
+                {/* iframe sudah memuat PDF dari file yang baru */}
+                <iframe src="/CV-Afrizal Putra Pratama 2026.pdf" className="w-full h-full border-none" title="Resume" />
               </div>
             </motion.div>
           </div>
