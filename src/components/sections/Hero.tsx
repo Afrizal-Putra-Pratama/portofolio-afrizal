@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { Download, X, ExternalLink } from "lucide-react";
+import { Download, X, ExternalLink, FileText } from "lucide-react";
 import { useLanguage } from "../LanguageProvider";
 
 export default function Hero() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [roleIndex, setRoleIndex] = useState(0);
@@ -31,20 +31,12 @@ export default function Hero() {
       {/* 1. Background Animatif: Floating Orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div 
-          animate={{ 
-            x: [0, 100, 0], 
-            y: [0, -50, 0],
-            scale: [1, 1.2, 1] 
-          }}
+          animate={{ x: [0, 100, 0], y: [0, -50, 0], scale: [1, 1.2, 1] }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
           className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-blue-100/30 dark:bg-blue-900/10 blur-[120px] rounded-full"
         />
         <motion.div 
-          animate={{ 
-            x: [0, -80, 0], 
-            y: [0, 100, 0],
-            scale: [1, 1.1, 1] 
-          }}
+          animate={{ x: [0, -80, 0], y: [0, 100, 0], scale: [1, 1.1, 1] }}
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
           className="absolute bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-indigo-100/20 dark:bg-zinc-800/20 blur-[100px] rounded-full"
         />
@@ -125,13 +117,7 @@ export default function Hero() {
               className="relative w-[290px] md:w-[340px] bg-white dark:bg-zinc-900 p-4 rounded-[2.5rem] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.1)] dark:shadow-none border border-zinc-200 dark:border-zinc-800 cursor-grab z-20 group"
             >
               <div className="relative w-full aspect-[4/5] rounded-[1.8rem] overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800">
-                <Image 
-                  src="/images/profile.jpg" 
-                  alt="Afrizal"
-                  fill
-                  className="object-cover object-top transition-transform duration-700 group-hover:scale-110"
-                  priority
-                />
+                <Image src="/images/profile.jpg" alt="Afrizal" fill className="object-cover object-top transition-transform duration-700 group-hover:scale-110" priority />
               </div>
 
               <div className="mt-6 px-2 pb-2">
@@ -140,8 +126,6 @@ export default function Hero() {
                     <p className="text-zinc-900 dark:text-white font-black text-xl leading-none uppercase tracking-tighter">Afrizal P.P.</p>
                     <p className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest mt-2">Indonesia • 2026-AFZ</p>
                   </div>
-                  
-                  {/* Barcode Random */}
                   <div className="w-full h-8 flex gap-[2px] items-center justify-center opacity-30 group-hover:opacity-60 transition-opacity">
                     {[...Array(30)].map((_, i) => (
                       <div key={i} className="bg-black dark:bg-white h-full" style={{ width: `${(i % 3 === 0) ? 3 : 1}px` }} />
@@ -159,27 +143,63 @@ export default function Hero() {
       {/* 4. MODAL RESUME */}
       <AnimatePresence>
         {isModalOpen && (
-          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-black/80 backdrop-blur-md" />
-            <motion.div initial={{ scale: 0.9, opacity: 0, y: 30 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 30 }} className="relative w-full max-w-5xl h-[85vh] bg-white dark:bg-zinc-950 rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col border border-zinc-200 dark:border-zinc-800">
-              <div className="p-6 md:px-10 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center bg-white dark:bg-zinc-900">
+            <motion.div initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }} className="relative w-full max-w-5xl h-[90vh] md:h-[85vh] bg-white dark:bg-zinc-950 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col border border-zinc-200 dark:border-zinc-800">
+              
+              {/* HEADER MODAL - Dioptimalkan untuk Mobile */}
+              <div className="p-4 md:px-10 md:py-6 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center bg-white dark:bg-zinc-900 shrink-0">
                 <div className="flex flex-col">
-                  <h3 className="font-black text-xl text-zinc-900 dark:text-white uppercase tracking-tighter">Curriculum Vitae</h3>
-                  <span className="text-xs text-zinc-500 font-medium">Afrizal Putra Pratama</span>
+                  {/* Di HP teksnya jadi 'CV', di Desktop jadi 'Curriculum Vitae' */}
+                  <h3 className="font-black text-lg md:text-xl text-zinc-900 dark:text-white uppercase tracking-tighter line-clamp-1">
+                    <span className="md:hidden">CV</span>
+                    <span className="hidden md:inline">Curriculum Vitae</span>
+                  </h3>
+                  <span className="text-[10px] md:text-xs text-zinc-500 font-medium line-clamp-1">Afrizal Putra Pratama</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  {/* Tombol Download sudah diarahkan ke file PDF yang baru */}
-                  <a href="/CV-Afrizal Putra Pratama 2026.pdf" download="CV-Afrizal Putra Pratama 2026.pdf" className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-2xl font-bold text-sm shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all">
-                    <Download className="w-4 h-4" /> Download PDF
+                
+                <div className="flex items-center gap-2 md:gap-3">
+                  <a 
+                    href="/CV-Afrizal Putra Pratama 2026.pdf" 
+                    download="CV-Afrizal Putra Pratama 2026.pdf" 
+                    className="flex items-center gap-1.5 md:gap-2 px-3 py-2.5 md:px-6 md:py-3 bg-blue-600 text-white rounded-xl md:rounded-2xl font-bold text-xs md:text-sm shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all whitespace-nowrap"
+                  >
+                    <Download className="w-4 h-4" /> 
+                    {/* Teks Unduh CV hanya muncul di layar yang agak besar, di layar sangat kecil hanya ikon */}
+                    <span className="hidden sm:inline">{language === "id" ? "Unduh CV" : "Download PDF"}</span>
                   </a>
-                  <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-2xl transition-colors">
-                    <X className="w-6 h-6 text-zinc-500" />
+                  <button onClick={() => setIsModalOpen(false)} className="p-2.5 md:p-3 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-xl md:rounded-2xl transition-colors">
+                    <X className="w-5 h-5 md:w-6 md:h-6 text-zinc-600 dark:text-zinc-400" />
                   </button>
                 </div>
               </div>
-              <div className="flex-1 bg-zinc-50 dark:bg-zinc-900 overflow-hidden">
-                {/* iframe sudah memuat PDF dari file yang baru */}
-                <iframe src="/CV-Afrizal Putra Pratama 2026.pdf" className="w-full h-full border-none" title="Resume" />
+
+              {/* BODY MODAL (IFRAME) */}
+              <div className="relative flex-1 bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
+                
+                {/* Fallback Message (Terlihat jika iframe gagal dimuat di HP) */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-0">
+                   <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4 text-blue-600 dark:text-blue-400">
+                     <FileText className="w-8 h-8" />
+                   </div>
+                   <h4 className="text-zinc-900 dark:text-white font-bold text-lg mb-2">
+                     {language === "id" ? "Pratinjau tidak tersedia di perangkat ini." : "Preview not available on this device."}
+                   </h4>
+                   <p className="text-zinc-500 dark:text-zinc-400 text-sm max-w-sm mb-6">
+                     {language === "id" ? "Browser mobile Anda mungkin memblokir tampilan PDF langsung. Silakan unduh file untuk melihatnya." : "Your mobile browser might block direct PDF rendering. Please download the file to view it."}
+                   </p>
+                   {/* Tombol Cadangan jika gagal dimuat */}
+                   <a href="/CV-Afrizal Putra Pratama 2026.pdf" download="CV-Afrizal Putra Pratama 2026.pdf" className="px-6 py-3 bg-blue-600 text-white font-bold text-sm rounded-xl">
+                     {language === "id" ? "Unduh CV Sekarang" : "Download CV Now"}
+                   </a>
+                </div>
+
+                {/* IFRAME PDF (Akan menutupi Fallback Message jika berhasil dimuat di Desktop) */}
+                <iframe 
+                  src="/CV-Afrizal Putra Pratama 2026.pdf" 
+                  className="relative z-10 w-full h-full border-none bg-transparent" 
+                  title="Resume" 
+                />
               </div>
             </motion.div>
           </div>
