@@ -15,6 +15,7 @@ export default function Hero() {
   const roles = [t.hero.role1, t.hero.role2];
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     const roleInterval = setInterval(() => {
       setRoleIndex((prev) => (prev === 0 ? 1 : 0));
@@ -116,7 +117,15 @@ export default function Hero() {
               className="relative w-[290px] md:w-[340px] bg-white dark:bg-zinc-900 p-4 rounded-[2.5rem] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.1)] dark:shadow-none border border-zinc-200 dark:border-zinc-800 cursor-grab z-20 group"
             >
               <div className="relative w-full aspect-[4/5] rounded-[1.8rem] overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800">
-                <Image src="/images/profile.jpg" alt="Afrizal" fill className="object-cover object-top transition-transform duration-700 group-hover:scale-110" priority />
+                {/* PERBAIKAN FOTO PROFIL: Ditambahkan sizes untuk optimasi responsif */}
+                <Image 
+                  src="/images/profile.jpg" 
+                  alt="Afrizal" 
+                  fill 
+                  sizes="(max-width: 768px) 100vw, 400px"
+                  className="object-cover object-top transition-transform duration-700 group-hover:scale-110" 
+                  priority 
+                />
               </div>
 
               <div className="mt-6 px-2 pb-2">
@@ -139,13 +148,12 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* 4. MODAL RESUME (Gambar Preview A4) */}
+      {/* 4. MODAL RESUME */}
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-black/80 backdrop-blur-md cursor-pointer" />
             
-            {/* Modal lebih ramping (max-w-[700px]) agar A4 tidak terlalu raksasa */}
             <motion.div initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }} className="relative w-full max-w-[700px] h-[90vh] md:h-[85vh] bg-zinc-100 dark:bg-zinc-900 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col border border-zinc-200 dark:border-zinc-800">
               
               {/* HEADER MODAL */}
@@ -173,25 +181,20 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* BODY MODAL (IMAGE PREVIEW) - Perbaikan Bug */}
-              <div className="relative flex-1 bg-zinc-200/50 dark:bg-zinc-950 overflow-y-auto custom-scrollbar p-0 flex flex-col">
+              {/* BODY MODAL (IMAGE PREVIEW) - PERBAIKAN KERTAS A4 */}
+              {/* items-start ditambahkan agar kertas tidak memanjang (stretching) ke bawah secara paksa */}
+              <div className="relative flex-1 bg-zinc-200/50 dark:bg-zinc-950 overflow-y-auto custom-scrollbar p-4 md:p-8 flex justify-center items-start">
                 
-                {/* Perbaikan: 
-                  - Menghilangkan rasio statis (aspect-[1/1.414])
-                  - Menggunakan width & height statis pada komponen Image agar tidak menghilang
-                  - Menambahkan padding top & bottom agar tidak nempel ujung 
-                */}
-                <div className="w-full flex justify-center py-4 md:py-8 px-2 md:px-6 h-max">
-                  <div className="relative w-full max-w-[650px] bg-white shadow-xl">
-                    <Image 
-                      src="/images/preview.jpg" 
-                      alt="CV Preview" 
-                      width={1240} 
-                      height={1754} 
-                      className="w-full h-auto object-contain"
-                      priority
-                    />
-                  </div>
+                {/* Kertas CV diubah agar tingginya pas dengan gambar (h-fit) dan menghilangkan spasi aneh */}
+                <div className="relative w-full max-w-[650px] h-fit bg-white shadow-xl flex flex-col leading-none overflow-hidden border border-zinc-200/50">
+                  <Image 
+                    src="/images/preview.jpg" 
+                    alt="CV Preview" 
+                    width={1240} 
+                    height={1754} 
+                    className="w-full h-auto block object-contain"
+                    priority
+                  />
                 </div>
                 
               </div>
