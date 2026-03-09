@@ -15,7 +15,6 @@ export default function Hero() {
   const roles = [t.hero.role1, t.hero.role2];
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     const roleInterval = setInterval(() => {
       setRoleIndex((prev) => (prev === 0 ? 1 : 0));
@@ -146,8 +145,8 @@ export default function Hero() {
           <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-black/80 backdrop-blur-md cursor-pointer" />
             
-            {/* Lebar modal disesuaikan agar pas dengan rasio A4 (max-w-[750px]) */}
-            <motion.div initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }} className="relative w-full max-w-[750px] h-[90vh] md:h-[85vh] bg-zinc-100 dark:bg-zinc-900 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col border border-zinc-200 dark:border-zinc-800">
+            {/* Modal lebih ramping (max-w-[700px]) agar A4 tidak terlalu raksasa */}
+            <motion.div initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }} className="relative w-full max-w-[700px] h-[90vh] md:h-[85vh] bg-zinc-100 dark:bg-zinc-900 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col border border-zinc-200 dark:border-zinc-800">
               
               {/* HEADER MODAL */}
               <div className="px-5 py-4 md:px-8 md:py-6 border-b border-zinc-200 dark:border-zinc-800 flex justify-between items-center bg-white dark:bg-zinc-950 shrink-0 z-20">
@@ -174,19 +173,23 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* BODY MODAL (IMAGE PREVIEW) - Padding dirampingkan */}
-              <div className="relative flex-1 bg-zinc-200/50 dark:bg-zinc-950 overflow-y-auto custom-scrollbar p-2 md:p-6 flex justify-center">
+              {/* BODY MODAL (IMAGE PREVIEW) - Perbaikan Bug */}
+              <div className="relative flex-1 bg-zinc-200/50 dark:bg-zinc-950 overflow-y-auto custom-scrollbar p-0 flex flex-col">
                 
-                {/* Kertas CV */}
-                <div className="relative w-full bg-white shadow-md rounded-lg overflow-hidden h-max border border-zinc-200/50">
-                  {/* Aspect ratio 1:1.414 (Standar kertas A4) */}
-                  <div className="relative w-full aspect-[1/1.414]">
+                {/* Perbaikan: 
+                  - Menghilangkan rasio statis (aspect-[1/1.414])
+                  - Menggunakan width & height statis pada komponen Image agar tidak menghilang
+                  - Menambahkan padding top & bottom agar tidak nempel ujung 
+                */}
+                <div className="w-full flex justify-center py-4 md:py-8 px-2 md:px-6 h-max">
+                  <div className="relative w-full max-w-[650px] bg-white shadow-xl">
                     <Image 
                       src="/images/preview.jpg" 
                       alt="CV Preview" 
-                      fill 
-                      className="object-contain"
-                      sizes="(max-width: 768px) 100vw, 800px"
+                      width={1240} 
+                      height={1754} 
+                      className="w-full h-auto object-contain"
+                      priority
                     />
                   </div>
                 </div>
