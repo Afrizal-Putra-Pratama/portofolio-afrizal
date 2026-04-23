@@ -1,11 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import { useLanguage } from "../LanguageProvider";
 
-// Array link berurutan sesuai dengan daftar di dictionary Anda
+// Mendefinisikan struktur data secara eksplisit untuk mengatasi Error TypeScript
+interface ArchiveItem {
+  project: string;
+  projectName: string;
+  role: string;
+  category: string;
+  link: string;
+}
+
 const archiveLinks = [
   "https://www.figma.com/proto/zJMPCRney6lcxfUp5r5Wup/CAPSTONE?node-id=328-1609&t=u5cHQxKk3J2Du3VE-1", // 1. Signargi
   "https://www.figma.com/proto/lAcwho98VwPjYi7EXoSYTM/Techno?node-id=0-1&t=KnTxjD5cwcZ3oKLU-1", // 2. Platipus
@@ -15,7 +23,7 @@ const archiveLinks = [
   "https://www.figma.com/proto/RMb1Ard8N96zbNk9SGLrTj/UMKM-Tas-Bu-Hartono?node-id=738-1728&t=8kIjRmuLz616nF12-1", // 6. Toko Buhartono
   "https://www.figma.com/proto/T6E9hAV1xkztl9cDGacLJN/parky?node-id=313-424&t=deKF589IApW07A6J-1", // 7. Parky
   "https://www.figma.com/proto/lQl9nhpII1kLuXNBijU1mi/quran-qolbu?node-id=17-154&t=zU1oxLDHZCLKJcTK-1", // 8. Quran Qolbu
-  "https://www.figma.com/proto/OzoIxZGinwMz7wpYsU4Yo4/BIG-PROJET?node-id=54-222", // 9. UMS UIID (Pengganti MyPresensi UMS)
+  "https://www.figma.com/proto/OzoIxZGinwMz7wpYsU4Yo4/BIG-PROJET?node-id=54-222", // 9. UMS UIID 
   "https://www.figma.com/proto/ccpavcW9mk9Z6uiQNmUZM1/Tugas-APS-%7C-IMK?node-id=0-1&t=WJ7hsLWdENp6fJm3-1", // 10. Capcut App
   "https://www.figma.com/design/c801KY8hyBAKxZtZhhPYOz/OVER-CONTENT?node-id=0-1&t=cC4xVCPE3VMBpPYd-1", // 11. Overcontent
   "https://www.figma.com/design/tadFm4F3wf8Lore0IedT4q/ID-CARD-WAVE-PROJECT?node-id=0-1&t=dezTSWsJt3o9boB1-1" // 12. Dewave
@@ -24,127 +32,185 @@ const archiveLinks = [
 export default function Archive() {
   const { t } = useLanguage();
 
+  const allItems: ArchiveItem[] = t.archive.items.map((item, index) => ({
+    ...item,
+    link: archiveLinks[index] || "#",
+    projectName: item.project === "MyPresensi UMS" ? "UMS UIID" : item.project,
+  }));
+
+  const row1 = allItems.slice(0, 4);
+  const row2 = allItems.slice(4, 8);
+  const row3 = allItems.slice(8, 12);
+
   return (
-    <section className="pt-10 md:pt-12 pb-20 md:pb-24 px-4 sm:px-6 lg:px-12 bg-white dark:bg-zinc-950 transition-colors duration-300" id="archive">
-      <div className="max-w-5xl mx-auto">
-        
-        <motion.div 
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-12 md:mb-16 flex flex-col items-center text-center"
-        >
+    <section className="pt-10 md:pt-12 pb-20 md:pb-24 bg-white dark:bg-zinc-950 transition-colors duration-300 overflow-hidden" id="archive">
+      
+      {/* CSS untuk menyembunyikan Scrollbar tapi tetap bisa di-scroll */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}} />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 mb-10 md:mb-14 flex flex-col items-center text-center">
+        <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <h2 className="text-3xl md:text-4xl font-black text-zinc-900 dark:text-white tracking-tight uppercase mb-3">
             {t.archive.title}
           </h2>
-          <div className="w-12 h-1 bg-blue-600 rounded-full mb-4" />
+          <div className="w-10 h-1 bg-blue-600 rounded-full mb-4 mx-auto" />
           <p className="text-zinc-600 dark:text-zinc-400 text-sm md:text-base max-w-lg">
             {t.archive.subtitle}
           </p>
         </motion.div>
+      </div>
 
-        {/* TAMPILAN MOBILE */}
-        <div className="flex flex-col gap-4 md:hidden">
-          {t.archive.items.map((item, index) => {
-            // Mengubah nama MyPresensi UMS menjadi UMS UIID secara otomatis
-            const projectName = item.project === "MyPresensi UMS" ? "UMS UIID" : item.project;
-            
-            return (
-              <motion.a
-                href={archiveLinks[index] || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                key={`mobile-${index}`}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
-                className="group flex flex-col p-5 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl hover:border-blue-300 dark:hover:border-blue-800 transition-all active:scale-95 relative overflow-hidden"
-              >
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                
-                <div className="flex justify-between items-start mb-3">
-                  <h3 className="text-base font-black text-zinc-900 dark:text-white leading-tight pr-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    {projectName}
-                  </h3>
-                  <ExternalLink className="w-4 h-4 text-zinc-400 group-hover:text-blue-500 shrink-0 mt-0.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                </div>
-                
-                <div className="flex flex-col gap-2 mt-auto">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase tracking-wider font-bold text-zinc-500 w-16">Peran:</span>
-                    <span className="text-[11px] font-bold text-zinc-700 dark:text-zinc-300 px-2.5 py-1 bg-white dark:bg-zinc-800 rounded-md border border-zinc-200 dark:border-zinc-700 shadow-sm">
-                      {item.role}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase tracking-wider font-bold text-zinc-500 w-16">Kategori:</span>
-                    <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400 px-2.5 py-1 bg-blue-50 dark:bg-blue-900/20 rounded-md">
-                      {item.category}
-                    </span>
-                  </div>
-                </div>
-              </motion.a>
-            );
-          })}
-        </div>
+      <div className="relative w-full max-w-[100vw] flex flex-col gap-4 md:gap-5">
+        
+        {/* Efek Fade-Out di Kiri & Kanan Layar */}
+        <div className="absolute left-0 top-0 bottom-0 w-8 md:w-24 bg-gradient-to-r from-white dark:from-zinc-950 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-8 md:w-24 bg-gradient-to-l from-white dark:from-zinc-950 to-transparent z-10 pointer-events-none" />
 
-        {/* TAMPILAN DESKTOP */}
-        <div className="hidden md:block w-full">
-          <div className="grid grid-cols-12 gap-4 px-6 pb-4 border-b-2 border-zinc-200 dark:border-zinc-800 text-[11px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
-            <div className="col-span-5">{t.archive.headers.project}</div>
-            <div className="col-span-3">{t.archive.headers.role}</div>
-            <div className="col-span-3">{t.archive.headers.category}</div>
-            <div className="col-span-1 text-right">{t.archive.headers.link}</div>
-          </div>
-
-          <div className="flex flex-col">
-            {t.archive.items.map((item, index) => {
-              // Mengubah nama MyPresensi UMS menjadi UMS UIID secara otomatis
-              const projectName = item.project === "MyPresensi UMS" ? "UMS UIID" : item.project;
-
-              return (
-                <motion.a
-                  href={archiveLinks[index] || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  key={`desktop-${index}`}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-20px" }}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className="group grid grid-cols-12 gap-4 items-center px-6 py-5 border-b border-zinc-200 dark:border-zinc-800/80 hover:bg-zinc-50 dark:hover:bg-zinc-900/40 transition-colors"
-                >
-                  <div className="col-span-5 flex items-center gap-3">
-                    <h3 className="text-sm lg:text-base font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                      {projectName}
-                    </h3>
-                  </div>
-
-                  <div className="col-span-3">
-                    <span className="text-xs lg:text-sm text-zinc-500 dark:text-zinc-400">
-                      {item.role}
-                    </span>
-                  </div>
-
-                  <div className="col-span-3">
-                    <span className="inline-block px-3 py-1 bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 text-[11px] font-bold rounded-full border border-zinc-200 dark:border-zinc-800 group-hover:border-blue-200 dark:group-hover:border-blue-900/50 transition-colors">
-                      {item.category}
-                    </span>
-                  </div>
-
-                  <div className="col-span-1 flex justify-end">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 group-hover:bg-blue-100 group-hover:text-blue-600 dark:group-hover:bg-blue-900/30 dark:group-hover:text-blue-400 transition-all -translate-x-2 group-hover:translate-x-0">
-                      <ExternalLink className="w-4 h-4" />
-                    </div>
-                  </div>
-                </motion.a>
-              );
-            })}
-          </div>
-        </div>
+        {/* Ticker Rows */}
+        <TickerRow items={row1} direction="right" />
+        <TickerRow items={row2} direction="left" />
+        <TickerRow items={row3} direction="right" />
 
       </div>
     </section>
   );
 }
+
+/* =========================================
+   KOMPONEN TICKER ROW (DRAGGABLE & AUTO-SCROLL)
+   ========================================= */
+interface TickerRowProps {
+  items: ArchiveItem[];
+  direction: "left" | "right";
+}
+
+const TickerRow = ({ items, direction }: TickerRowProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isHoveredOrDragged = useRef(false);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    let animationFrameId: number;
+    const speed = direction === "left" ? 1 : -1;
+
+    // Mempersiapkan posisi awal agar loop tidak kosong
+    if (direction === "right") {
+      container.scrollLeft = container.scrollWidth / 3;
+    }
+
+    const autoScroll = () => {
+      if (!isHoveredOrDragged.current && container) {
+        container.scrollLeft += speed;
+
+        // Logika Seamless Infinite Loop (Scroll menyambung tanpa putus)
+        const singleSetWidth = container.scrollWidth / 3;
+        
+        if (direction === "left" && container.scrollLeft >= singleSetWidth) {
+          container.scrollLeft -= singleSetWidth;
+        } else if (direction === "right" && container.scrollLeft <= 0) {
+          container.scrollLeft += singleSetWidth;
+        }
+      }
+      animationFrameId = requestAnimationFrame(autoScroll);
+    };
+
+    animationFrameId = requestAnimationFrame(autoScroll);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [direction]);
+
+  // --- Fungsi Mouse Drag (Untuk Desktop) ---
+  const handleMouseDown = (e: React.MouseEvent) => {
+    isDragging.current = true;
+    isHoveredOrDragged.current = true;
+    startX.current = e.pageX - (containerRef.current?.offsetLeft || 0);
+    scrollLeft.current = containerRef.current?.scrollLeft || 0;
+    
+    // Matikan klik link saat mulai drag
+    if (containerRef.current) containerRef.current.style.pointerEvents = "none";
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current || !containerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - containerRef.current.offsetLeft;
+    const walk = (x - startX.current) * 1.5; // Kecepatan sensitivitas geser
+    containerRef.current.scrollLeft = scrollLeft.current - walk;
+  };
+
+  const handleMouseUpOrLeave = () => {
+    isDragging.current = false;
+    isHoveredOrDragged.current = false;
+    
+    // Nyalakan kembali klik link dengan sedikit delay (mencegah klik tak sengaja)
+    setTimeout(() => {
+      if (containerRef.current) containerRef.current.style.pointerEvents = "auto";
+    }, 50);
+  };
+
+  return (
+    <div 
+      ref={containerRef}
+      className="flex w-full overflow-x-auto py-1 cursor-grab active:cursor-grabbing hide-scrollbar"
+      onMouseEnter={() => (isHoveredOrDragged.current = true)}
+      onMouseLeave={handleMouseUpOrLeave}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUpOrLeave}
+      onTouchStart={() => (isHoveredOrDragged.current = true)}
+      onTouchEnd={() => (isHoveredOrDragged.current = false)}
+    >
+      {/* Container utama dengan lebar maksimum yang sesuai */}
+      <div className="flex w-max gap-3 md:gap-4 pr-3 md:pr-4">
+        {/* Render 3 Set data sekaligus agar perputaran infinite loop mulus */}
+        {[1, 2, 3].map((setIndex) => (
+          <div key={`set-${setIndex}`} className="flex gap-3 md:gap-4">
+            {items.map((item, idx) => (
+              <ArchiveCard key={`card-${setIndex}-${idx}`} item={item} />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+/* =========================================
+   KOMPONEN KARTU UI/UX (COMPACT & RECTANGULAR)
+   ========================================= */
+const ArchiveCard = ({ item }: { item: ArchiveItem }) => (
+  <a 
+    href={item.link} 
+    target="_blank" 
+    rel="noopener noreferrer" 
+    draggable={false} // Mencegah browser menarik gambar/link secara default
+    className="group w-[250px] md:w-[290px] shrink-0 bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 flex flex-col hover:border-blue-400 dark:hover:border-blue-600 hover:shadow-md transition-all duration-300"
+  >
+    <div className="flex justify-between items-start mb-2 pointer-events-none">
+      <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[9px] md:text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider line-clamp-1">
+        {item.category}
+      </div>
+      <div className="text-zinc-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-transform duration-300 -translate-x-1 translate-y-1 group-hover:translate-x-0 group-hover:translate-y-0">
+        <ExternalLink size={14} />
+      </div>
+    </div>
+
+    <h3 className="text-base md:text-lg font-black text-zinc-900 dark:text-white leading-tight tracking-tight line-clamp-1 pointer-events-none">
+      {item.projectName}
+    </h3>
+
+    <div className="mt-3 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center gap-1.5 pointer-events-none">
+      <span className="text-[10px] text-zinc-500 font-medium">Peran:</span>
+      <span className="text-[10px] md:text-xs font-bold text-zinc-700 dark:text-zinc-300 line-clamp-1">
+        {item.role}
+      </span>
+    </div>
+  </a>
+);

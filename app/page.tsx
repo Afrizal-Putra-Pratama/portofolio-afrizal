@@ -11,8 +11,8 @@ export default function Home() {
     <main className="min-h-screen bg-[#F8F9FA] dark:bg-black text-zinc-900 dark:text-white selection:bg-blue-100 dark:selection:bg-zinc-800 font-sans relative transition-colors duration-500">
       <Navbar />
       <Hero />
-      <Experience />
       <Projects />
+      <Experience />
       <TechStack />
       <Archive />
       <Footer />

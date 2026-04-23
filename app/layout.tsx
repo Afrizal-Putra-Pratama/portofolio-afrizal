@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "./globals.css"; // Ini sudah pasti benar sesuai foto Anda
+
 import { ThemeProvider } from "../src/components/ThemeProvider";
-import { LanguageProvider } from "../src/components/LanguageProvider"; // Tambahan baru
+import { LanguageProvider } from "../src/components/LanguageProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,16 +19,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className="scroll-smooth" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${inter.className} overflow-x-hidden bg-[#F8F9FA] dark:bg-black text-zinc-900 dark:text-zinc-50`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <LanguageProvider>  {/* Tambahan baru */}
+          <LanguageProvider>  
             {children}
-          </LanguageProvider> {/* Tambahan baru */}
+          </LanguageProvider> 
         </ThemeProvider>
       </body>
     </html>

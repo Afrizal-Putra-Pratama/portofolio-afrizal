@@ -9,21 +9,19 @@ import { useLanguage } from "../LanguageProvider";
 export default function Hero() {
   const { t, language } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [roleIndex, setRoleIndex] = useState(0);
+  const [roleIndex, setRoleIndex] = useState(0); // State mounted dihapus total
   
   const roles = [t.hero.role1, t.hero.role2];
 
+  // useEffect sekarang HANYA digunakan untuk interval animasi teks
+  // Tidak ada lagi setState sinkron yang memicu error cascading
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
     const roleInterval = setInterval(() => {
       setRoleIndex((prev) => (prev === 0 ? 1 : 0));
     }, 3000);
+    
     return () => clearInterval(roleInterval);
-  }, [t.hero.role1, t.hero.role2]);
-
-  if (!mounted) return null;
+  }, []); 
 
   return (
     <section className="relative min-h-screen flex items-center justify-center px-6 md:px-12 overflow-hidden bg-[#F8F9FA] dark:bg-black transition-colors duration-500">
@@ -117,9 +115,8 @@ export default function Hero() {
               className="relative w-[290px] md:w-[340px] bg-white dark:bg-zinc-900 p-4 rounded-[2.5rem] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.1)] dark:shadow-none border border-zinc-200 dark:border-zinc-800 cursor-grab z-20 group"
             >
               <div className="relative w-full aspect-[4/5] rounded-[1.8rem] overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800">
-                {/* PERBAIKAN FOTO PROFIL: Ditambahkan sizes untuk optimasi responsif */}
                 <Image 
-                  src="/images/afri.jpg" 
+                  src="/images/afrizal.png" 
                   alt="Afrizal" 
                   fill 
                   sizes="(max-width: 768px) 100vw, 400px"
@@ -148,13 +145,13 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* 4. MODAL RESUME */}
+      {/* 4. MODAL RESUME (PDF PREVIEW) */}
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-black/80 backdrop-blur-md cursor-pointer" />
             
-            <motion.div initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }} className="relative w-full max-w-[700px] h-[90vh] md:h-[85vh] bg-zinc-100 dark:bg-zinc-900 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col border border-zinc-200 dark:border-zinc-800">
+            <motion.div initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }} className="relative w-full max-w-4xl h-[90vh] md:h-[85vh] bg-zinc-100 dark:bg-zinc-900 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col border border-zinc-200 dark:border-zinc-800">
               
               {/* HEADER MODAL */}
               <div className="px-5 py-4 md:px-8 md:py-6 border-b border-zinc-200 dark:border-zinc-800 flex justify-between items-center bg-white dark:bg-zinc-950 shrink-0 z-20">
@@ -168,8 +165,8 @@ export default function Hero() {
                 
                 <div className="flex items-center gap-2 md:gap-4">
                   <a 
-                    href="/CV-Afrizal Putra Pratama 2026.pdf" 
-                    download="CV-Afrizal Putra Pratama 2026.pdf" 
+                    href="/CV-Afrizal Putra Pratama.pdf" 
+                    download="CV-Afrizal Putra Pratama.pdf" 
                     className="flex items-center gap-1.5 md:gap-2 px-4 py-2.5 md:px-6 md:py-3 bg-blue-600 text-white rounded-xl md:rounded-2xl font-bold text-xs md:text-sm shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all whitespace-nowrap"
                   >
                     <Download className="w-4 h-4" /> 
@@ -181,22 +178,13 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* BODY MODAL (IMAGE PREVIEW) - PERBAIKAN KERTAS A4 */}
-              {/* items-start ditambahkan agar kertas tidak memanjang (stretching) ke bawah secara paksa */}
-              <div className="relative flex-1 bg-zinc-200/50 dark:bg-zinc-950 overflow-y-auto custom-scrollbar p-4 md:p-8 flex justify-center items-start">
-                
-                {/* Kertas CV diubah agar tingginya pas dengan gambar (h-fit) dan menghilangkan spasi aneh */}
-                <div className="relative w-full max-w-[650px] h-fit bg-white shadow-xl flex flex-col leading-none overflow-hidden border border-zinc-200/50">
-                  <Image 
-                    src="/images/preview.jpg" 
-                    alt="CV Preview" 
-                    width={1240} 
-                    height={1754} 
-                    className="w-full h-auto block object-contain"
-                    priority
-                  />
-                </div>
-                
+              {/* BODY MODAL (IFRAME PDF) */}
+              <div className="relative flex-1 w-full h-full bg-zinc-100 dark:bg-zinc-950 overflow-hidden">
+                <iframe 
+                  src="/CV-Afrizal Putra Pratama.pdf#view=FitH" 
+                  className="w-full h-full border-none" 
+                  title="Resume" 
+                />
               </div>
               
             </motion.div>

@@ -7,28 +7,29 @@ import { ExternalLink, Github, X, ArrowRight, LayoutTemplate, Users, Layers, Act
 import { SiReact, SiLaravel, SiPython, SiFigma, SiMysql, SiFirebase } from "react-icons/si";
 import { useLanguage } from "../LanguageProvider";
 
+// URUTAN BARU: 1. Posturely, 2. Adsa, 3. SheSafe, 4. SDIT
 const projectImages = [
-  "/images/projects/adsa.jpg", 
   "/images/projects/posturely.jpg", 
+  "/images/projects/adsa.jpg", 
   "/images/projects/shesafe.jpg", 
   "/images/projects/sdit.jpg", 
 ];
 
-
+// URUTAN BARU TAUTAN
 const projectLinks = [
-  { 
-    github: "https://github.com/Afrizal-Putra-Pratama/AdsaWonokerso",
-    demo: "https://adsawonokerso.my.id/"
-  },
-  { 
+  { // 1. Posturely (Gold Medal YISF)
     github: "https://github.com/Afrizal-Putra-Pratama/kidposture-web",
     demo: null 
   },
-  { 
+  { // 2. AdsaWonokerso
+    github: "https://github.com/Afrizal-Putra-Pratama/AdsaWonokerso",
+    demo: "https://adsawonokerso.my.id/"
+  },
+  { // 3. SheSafe
     github: null, 
     demo: "https://www.figma.com/proto/NS5Wdu1jaGIMa3MlFgfdhu/Gemastik--25?node-id=1-3&t=jQYEaUOYT7ANoqCD-1"
   },
-  { 
+  { // 4. SDIT Financial
     github: null,
     demo: "https://www.figma.com/proto/RxqHfsDjv58RuoFAbJsi0Q/Overlogic-SDIT-Project---Overlogic-Universe?node-id=108-2&t=XkVpg8YObXNnHZdO-1"
   }
@@ -157,7 +158,7 @@ export default function Projects() {
               <div className="px-1">
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="text-blue-600 dark:text-blue-500 font-bold text-[9px] uppercase tracking-widest">
-                    0{index + 1} {"//"} {project.category.split("•")[0]}
+                    0{index + 1} {project.category.split("•")[0]}
                   </span>
                 </div>
                 <h3 className="text-xl font-black text-zinc-900 dark:text-white tracking-tight leading-tight mb-1">
