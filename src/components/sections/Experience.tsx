@@ -3,101 +3,117 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useLanguage } from "../LanguageProvider";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Experience() {
   const { t } = useLanguage();
+  
+  // Mempertahankan state activeTab untuk switcher
   const [activeTab, setActiveTab] = useState<"org" | "academic">("org");
   const currentData = activeTab === "org" ? t.experience.organization : t.experience.academic;
 
-  // Referensi untuk mendeteksi scroll pada area timeline
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Mengambil progres scroll relatif terhadap container timeline
+  // Mempertahankan deteksi scroll timeline dengan Framer Motion
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start center", "end center"] // Animasi jalan saat atas container ada di tengah layar, selesai saat bawah container di tengah layar
+    offset: ["start center", "end center"] 
   });
 
-  // Mengubah progres (0 hingga 1) menjadi persentase tinggi garis (0% hingga 100%)
   const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
+  // GSAP untuk animasi masuk (Reveal) teks header
+  useGSAP(() => {
+    gsap.fromTo(
+      ".gsap-exp-reveal",
+      { y: 50, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 80%",
+        },
+      }
+    );
+  }, { scope: containerRef });
+
   return (
-    <section className="py-24 px-6 bg-white dark:bg-zinc-950 transition-colors duration-300" id="experience">
-      <div className="max-w-3xl mx-auto">
+    <section 
+      id="experience"
+      // Latar belakang polos agar bersih dan fokus ke konten
+      className="relative min-h-screen py-24 px-4 sm:px-6 lg:px-12 bg-[#F4F4F5] dark:bg-[#111827] font-mono transition-colors duration-500 overflow-hidden"
+    >
+      <div className="max-w-4xl mx-auto w-full relative z-10" ref={containerRef}>
         
-        {/* Header Minimalis */}
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          className="mb-10"
-        >
-          <h2 className="text-3xl md:text-4xl font-black text-zinc-900 dark:text-white tracking-tighter uppercase">
+        {/* =========================================
+            HEADER SECTION (Giant Typography)
+            ========================================= */}
+        <div className="gsap-exp-reveal mb-12 flex flex-col items-start text-left">
+          <h2 className="text-[40px] md:text-[64px] lg:text-[80px] font-black text-[#111827] dark:text-[#FFFFFF] tracking-tighter uppercase leading-[0.9]">
             {t.experience.title}
           </h2>
-          <div className="w-12 h-1 bg-blue-600 mt-2 mb-4 rounded-full" />
-          <p className="text-zinc-600 dark:text-zinc-400 text-sm md:text-base max-w-xl">
+          <p className="mt-4 md:mt-6 text-[#111827]/70 dark:text-[#FFFFFF]/70 text-[14px] md:text-[18px] max-w-xl font-medium">
             {t.experience.subtitle}
           </p>
-        </motion.div>
+        </div>
 
-        {/* CTA Tabs (Switcher) */}
-        <div className="flex gap-6 mb-12 border-b border-zinc-200 dark:border-zinc-800 relative z-20">
+        {/* =========================================
+            CTA TABS (Neo-Brutalist Buttons)
+            ========================================= */}
+        <div className="gsap-exp-reveal flex flex-wrap gap-4 mb-16 relative z-20">
           <button 
             onClick={() => setActiveTab("org")}
-            className={`pb-4 text-xs md:text-sm font-bold uppercase tracking-widest relative transition-colors ${
+            className={`px-6 py-3 border-[3px] border-[#111827] dark:border-[#FFFFFF] rounded-[8px] text-[12px] md:text-[14px] font-black uppercase tracking-widest transition-all ${
               activeTab === "org" 
-                ? "text-blue-600 dark:text-blue-400" 
-                : "text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
+                ? "bg-[#ea580c] text-[#FFFFFF] shadow-[4px_4px_0px_0px_#111827] dark:shadow-[4px_4px_0px_0px_#FFFFFF] translate-y-[-2px] border-transparent dark:border-transparent" 
+                : "bg-[#FFFFFF] dark:bg-[#111827] text-[#111827] dark:text-[#FFFFFF] hover:bg-[#ea580c] hover:text-[#FFFFFF] shadow-none"
             }`}
           >
             {t.experience.tabs.org}
-            {activeTab === "org" && (
-              <motion.div 
-                layoutId="activeTabUnderline" 
-                className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-blue-600 dark:bg-blue-400" 
-              />
-            )}
           </button>
 
           <button 
             onClick={() => setActiveTab("academic")}
-            className={`pb-4 text-xs md:text-sm font-bold uppercase tracking-widest relative transition-colors ${
+            className={`px-6 py-3 border-[3px] border-[#111827] dark:border-[#FFFFFF] rounded-[8px] text-[12px] md:text-[14px] font-black uppercase tracking-widest transition-all ${
               activeTab === "academic" 
-                ? "text-blue-600 dark:text-blue-400" 
-                : "text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
+                ? "bg-[#ea580c] text-[#FFFFFF] shadow-[4px_4px_0px_0px_#111827] dark:shadow-[4px_4px_0px_0px_#FFFFFF] translate-y-[-2px] border-transparent dark:border-transparent" 
+                : "bg-[#FFFFFF] dark:bg-[#111827] text-[#111827] dark:text-[#FFFFFF] hover:bg-[#ea580c] hover:text-[#FFFFFF] shadow-none"
             }`}
           >
             {t.experience.tabs.academic}
-            {activeTab === "academic" && (
-              <motion.div 
-                layoutId="activeTabUnderline" 
-                className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-blue-600 dark:bg-blue-400" 
-              />
-            )}
           </button>
         </div>
 
-        {/* Timeline Area (Tempat Animasi Scroll Berjalan) */}
-        <div className="relative min-h-[400px]" ref={containerRef}>
+        {/* =========================================
+            TIMELINE AREA
+            ========================================= */}
+        <div className="relative min-h-[400px] pb-10">
           
-          {/* 1. Static Background Line (Garis Abu-abu Pudar) */}
-          <div className="absolute left-[7px] top-2 bottom-0 w-[2px] bg-zinc-200 dark:bg-zinc-800 rounded-full" />
+          {/* Garis Dasar Timeline (Ditebalkan menjadi 4px) */}
+          <div className="absolute left-[9px] top-4 bottom-0 w-[4px] bg-[#111827]/10 dark:bg-[#FFFFFF]/10 rounded-full" />
 
-          {/* 2. Animated Scroll Line (Garis Biru yang Mengisi saat di-scroll) */}
+          {/* Garis Scroll Animasi (Warna Oranye) */}
           <motion.div
             style={{ height: lineHeight }}
-            className="absolute left-[7px] top-2 w-[2px] bg-blue-600 origin-top z-10 rounded-full shadow-[0_0_10px_rgba(37,99,235,0.5)] dark:shadow-[0_0_15px_rgba(96,165,250,0.6)]"
+            className="absolute left-[9px] top-4 w-[4px] bg-[#ea580c] origin-top z-10 rounded-full shadow-[0_0_15px_rgba(234,88,12,0.5)]"
           />
 
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
+              exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.3 }}
-              className="relative z-20"
+              className="relative z-20 pt-2"
             >
               {currentData.map((exp, index) => (
                 <motion.div 
@@ -105,37 +121,40 @@ export default function Experience() {
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-10%" }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="mb-12 pl-10 relative group"
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  className="mb-8 md:mb-10 pl-10 md:pl-16 relative group"
                 >
                   
-                  {/* Titik Animatif (Muncul membesar, lalu bisa di-hover) */}
+                  {/* Titik Animatif (Berubah jadi kotak membulat Brutalist) */}
                   <motion.div 
                     initial={{ scale: 0 }}
                     whileInView={{ scale: 1 }}
                     viewport={{ once: true, margin: "-10%" }}
                     transition={{ type: "spring", stiffness: 300, damping: 20, delay: index * 0.1 + 0.2 }}
-                    className="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-white dark:bg-zinc-950 border-2 border-zinc-300 dark:border-zinc-700 group-hover:border-blue-600 group-hover:bg-blue-600 z-20 transition-all duration-300 shadow-sm"
+                    className="absolute left-[2px] top-[18px] md:top-[22px] w-[18px] h-[18px] bg-[#F4F4F5] dark:bg-[#111827] border-[3px] border-[#111827] dark:border-[#FFFFFF] rounded-[4px] group-hover:bg-[#ea580c] z-20 transition-colors duration-300"
                   />
                   
-                  {/* Konten Teks (Efek Nudge/Geser saat di-hover) */}
-                  <div className="transform transition-transform duration-300 group-hover:translate-x-2">
-                    <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 mb-2">
-                      <h3 className="text-lg md:text-xl font-bold text-zinc-900 dark:text-white group-hover:text-blue-600 transition-colors">
+                  {/* Kartu Konten Pengalaman (Neo-Brutalist Card) */}
+                  <div className="bg-[#FFFFFF] dark:bg-[#111827] border-[3px] border-[#111827] dark:border-[#FFFFFF] rounded-[8px] p-5 md:p-6 shadow-[4px_4px_0px_0px_#111827] dark:shadow-[4px_4px_0px_0px_#FFFFFF] transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:shadow-[6px_6px_0px_0px_#ea580c] dark:group-hover:shadow-[6px_6px_0px_0px_#ea580c]">
+                    
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 mb-3">
+                      <h3 className="text-[18px] md:text-[22px] font-black text-[#111827] dark:text-[#FFFFFF] uppercase tracking-tight leading-none group-hover:text-[#ea580c] transition-colors">
                         {exp.title}
                       </h3>
-                      <span className="text-[10px] md:text-xs font-black text-blue-600 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded uppercase tracking-widest w-fit shrink-0 mt-1 md:mt-0">
+                      {/* Badge Waktu */}
+                      <span className="inline-block bg-[#ea580c] border-[2px] border-[#111827] dark:border-transparent text-[#FFFFFF] px-3 py-1 rounded-[6px] text-[10px] md:text-[12px] font-black uppercase tracking-widest w-fit shrink-0 shadow-[2px_2px_0px_0px_#111827] dark:shadow-[2px_2px_0px_0px_#FFFFFF]">
                         {exp.period}
                       </span>
                     </div>
 
-                    <h4 className="text-xs font-bold text-zinc-500 dark:text-zinc-500 mb-3 uppercase tracking-wider">
+                    <h4 className="text-[12px] md:text-[14px] font-black text-[#111827]/60 dark:text-[#FFFFFF]/60 mb-4 uppercase tracking-widest">
                       {exp.organization}
                     </h4>
 
-                    <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl">
+                    <p className="text-[14px] text-[#111827]/80 dark:text-[#FFFFFF]/80 leading-relaxed font-medium max-w-3xl">
                       {exp.description}
                     </p>
+
                   </div>
 
                 </motion.div>

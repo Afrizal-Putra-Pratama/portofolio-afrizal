@@ -39,7 +39,7 @@ export const dictionary = {
       academic: [
         { 
           title: "S1 Teknik Informatika", 
-          organization: "Universitas Muhammadiyah Surakarta", 
+          organization: "Universitas Muhammadiyah Surakarta / IPK: 3.73/4.00", 
           period: "Lulusan 2026", 
           description: "Berfokus pada penyelesaian masalah melalui antarmuka digital dan rekayasa perangkat lunak. Mengerjakan tugas akhir mengenai sistem aduan desa terintegrasi (AdsaWonokerso)." 
         },
@@ -148,7 +148,7 @@ export const dictionary = {
       academic: [
         { 
           title: "B.Sc. in Informatics Engineering", 
-          organization: "Muhammadiyah University of Surakarta", 
+          organization: "Muhammadiyah University of Surakarta / GPA: 3.73/4.00", 
           period: "Class of 2026", 
           description: "Focused on problem-solving through digital interfaces and software engineering. Currently working on a final year project regarding an integrated village complaint system (AdsaWonokerso)." 
         },

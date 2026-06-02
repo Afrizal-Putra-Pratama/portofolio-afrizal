@@ -1,11 +1,15 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import { useLanguage } from "../LanguageProvider";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// Mendefinisikan struktur data secara eksplisit untuk mengatasi Error TypeScript
+gsap.registerPlugin(ScrollTrigger);
+
 interface ArchiveItem {
   project: string;
   projectName: string;
@@ -31,6 +35,7 @@ const archiveLinks = [
 
 export default function Archive() {
   const { t } = useLanguage();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const allItems: ArchiveItem[] = t.archive.items.map((item, index) => ({
     ...item,
@@ -42,39 +47,56 @@ export default function Archive() {
   const row2 = allItems.slice(4, 8);
   const row3 = allItems.slice(8, 12);
 
+  useGSAP(() => {
+    gsap.fromTo(
+      ".gsap-arc-reveal",
+      { y: 50, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 85%",
+        },
+      }
+    );
+  }, { scope: containerRef });
+
   return (
-    <section className="pt-10 md:pt-12 pb-20 md:pb-24 bg-white dark:bg-zinc-950 transition-colors duration-300 overflow-hidden" id="archive">
+    <section 
+      id="archive" 
+      ref={containerRef}
+      className="relative pt-20 md:pt-28 pb-32 md:pb-40 bg-[#F4F4F5] dark:bg-[#111827] font-mono transition-colors duration-500 overflow-hidden"
+    >
       
-      {/* CSS untuk menyembunyikan Scrollbar tapi tetap bisa di-scroll */}
       <style dangerouslySetInnerHTML={{ __html: `
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 mb-10 md:mb-14 flex flex-col items-center text-center">
-        <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <h2 className="text-3xl md:text-4xl font-black text-zinc-900 dark:text-white tracking-tight uppercase mb-3">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 mb-16 md:mb-24 flex flex-col items-center md:items-start text-center md:text-left relative z-10">
+        
+        <div className="gsap-arc-reveal flex flex-col items-center md:items-start">
+          
+          <h2 className="text-[40px] md:text-[64px] lg:text-[80px] font-black text-[#111827] dark:text-[#FFFFFF] tracking-tighter uppercase leading-[0.9]">
             {t.archive.title}
           </h2>
-          <div className="w-10 h-1 bg-blue-600 rounded-full mb-4 mx-auto" />
-          <p className="text-zinc-600 dark:text-zinc-400 text-sm md:text-base max-w-lg">
+          <p className="mt-4 md:mt-6 text-[#111827]/70 dark:text-[#FFFFFF]/70 text-[14px] md:text-[18px] max-w-xl font-medium">
             {t.archive.subtitle}
           </p>
-        </motion.div>
-      </div>
-
-      <div className="relative w-full max-w-[100vw] flex flex-col gap-4 md:gap-5">
-        
-        {/* Efek Fade-Out di Kiri & Kanan Layar */}
-        <div className="absolute left-0 top-0 bottom-0 w-8 md:w-24 bg-gradient-to-r from-white dark:from-zinc-950 to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-8 md:w-24 bg-gradient-to-l from-white dark:from-zinc-950 to-transparent z-10 pointer-events-none" />
-
-        {/* Ticker Rows */}
-        <TickerRow items={row1} direction="right" />
-        <TickerRow items={row2} direction="left" />
-        <TickerRow items={row3} direction="right" />
+        </div>
 
       </div>
+
+      <div className="gsap-arc-reveal relative w-full max-w-[100vw] flex flex-col gap-4 md:gap-5 z-20">
+        <TickerRow items={row1} direction="right" speedMultiplier={0.8} />
+        <TickerRow items={row2} direction="left" speedMultiplier={1} />
+        <TickerRow items={row3} direction="right" speedMultiplier={0.9} />
+      </div>
+
     </section>
   );
 }
@@ -85,9 +107,10 @@ export default function Archive() {
 interface TickerRowProps {
   items: ArchiveItem[];
   direction: "left" | "right";
+  speedMultiplier?: number;
 }
 
-const TickerRow = ({ items, direction }: TickerRowProps) => {
+const TickerRow = ({ items, direction, speedMultiplier = 1 }: TickerRowProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isHoveredOrDragged = useRef(false);
   const isDragging = useRef(false);
@@ -99,9 +122,8 @@ const TickerRow = ({ items, direction }: TickerRowProps) => {
     if (!container) return;
 
     let animationFrameId: number;
-    const speed = direction === "left" ? 1 : -1;
+    const speed = direction === "left" ? (1 * speedMultiplier) : (-1 * speedMultiplier);
 
-    // Mempersiapkan posisi awal agar loop tidak kosong
     if (direction === "right") {
       container.scrollLeft = container.scrollWidth / 3;
     }
@@ -110,7 +132,6 @@ const TickerRow = ({ items, direction }: TickerRowProps) => {
       if (!isHoveredOrDragged.current && container) {
         container.scrollLeft += speed;
 
-        // Logika Seamless Infinite Loop (Scroll menyambung tanpa putus)
         const singleSetWidth = container.scrollWidth / 3;
         
         if (direction === "left" && container.scrollLeft >= singleSetWidth) {
@@ -124,24 +145,39 @@ const TickerRow = ({ items, direction }: TickerRowProps) => {
 
     animationFrameId = requestAnimationFrame(autoScroll);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [direction]);
+  }, [direction, speedMultiplier]);
 
-  // --- Fungsi Mouse Drag (Untuk Desktop) ---
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
     isDragging.current = true;
     isHoveredOrDragged.current = true;
-    startX.current = e.pageX - (containerRef.current?.offsetLeft || 0);
+    
+    let clientX = 0;
+    if ('touches' in e) {
+      clientX = e.touches[0].pageX;
+    } else {
+      clientX = e.pageX;
+    }
+
+    startX.current = clientX - (containerRef.current?.offsetLeft || 0);
     scrollLeft.current = containerRef.current?.scrollLeft || 0;
     
-    // Matikan klik link saat mulai drag
     if (containerRef.current) containerRef.current.style.pointerEvents = "none";
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isDragging.current || !containerRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - containerRef.current.offsetLeft;
-    const walk = (x - startX.current) * 1.5; // Kecepatan sensitivitas geser
+    
+    if (e.cancelable) e.preventDefault(); 
+    
+    let clientX = 0;
+    if ('touches' in e) {
+      clientX = e.touches[0].pageX;
+    } else {
+      clientX = (e as React.MouseEvent).pageX;
+    }
+
+    const x = clientX - containerRef.current.offsetLeft;
+    const walk = (x - startX.current) * 2; 
     containerRef.current.scrollLeft = scrollLeft.current - walk;
   };
 
@@ -149,7 +185,6 @@ const TickerRow = ({ items, direction }: TickerRowProps) => {
     isDragging.current = false;
     isHoveredOrDragged.current = false;
     
-    // Nyalakan kembali klik link dengan sedikit delay (mencegah klik tak sengaja)
     setTimeout(() => {
       if (containerRef.current) containerRef.current.style.pointerEvents = "auto";
     }, 50);
@@ -158,20 +193,19 @@ const TickerRow = ({ items, direction }: TickerRowProps) => {
   return (
     <div 
       ref={containerRef}
-      className="flex w-full overflow-x-auto py-1 cursor-grab active:cursor-grabbing hide-scrollbar"
+      className="flex w-full overflow-x-auto py-2 cursor-grab active:cursor-grabbing hide-scrollbar"
       onMouseEnter={() => (isHoveredOrDragged.current = true)}
       onMouseLeave={handleMouseUpOrLeave}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUpOrLeave}
-      onTouchStart={() => (isHoveredOrDragged.current = true)}
-      onTouchEnd={() => (isHoveredOrDragged.current = false)}
+      onTouchStart={handleMouseDown}
+      onTouchMove={handleMouseMove}
+      onTouchEnd={handleMouseUpOrLeave}
     >
-      {/* Container utama dengan lebar maksimum yang sesuai */}
-      <div className="flex w-max gap-3 md:gap-4 pr-3 md:pr-4">
-        {/* Render 3 Set data sekaligus agar perputaran infinite loop mulus */}
+      <div className="flex w-max gap-4 pr-4">
         {[1, 2, 3].map((setIndex) => (
-          <div key={`set-${setIndex}`} className="flex gap-3 md:gap-4">
+          <div key={`set-${setIndex}`} className="flex gap-4">
             {items.map((item, idx) => (
               <ArchiveCard key={`card-${setIndex}-${idx}`} item={item} />
             ))}
@@ -183,32 +217,37 @@ const TickerRow = ({ items, direction }: TickerRowProps) => {
 };
 
 /* =========================================
-   KOMPONEN KARTU UI/UX (COMPACT & RECTANGULAR)
+   KOMPONEN KARTU NEO-BRUTALIST (DIPERBAIKI)
    ========================================= */
 const ArchiveCard = ({ item }: { item: ArchiveItem }) => (
   <a 
     href={item.link} 
     target="_blank" 
     rel="noopener noreferrer" 
-    draggable={false} // Mencegah browser menarik gambar/link secara default
-    className="group w-[250px] md:w-[290px] shrink-0 bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 flex flex-col hover:border-blue-400 dark:hover:border-blue-600 hover:shadow-md transition-all duration-300"
+    draggable={false} 
+    className="group w-[260px] md:w-[320px] shrink-0 bg-[#FFFFFF] dark:bg-[#111827] border-[3px] border-[#111827] dark:border-[#FFFFFF] rounded-[8px] p-5 flex flex-col shadow-[4px_4px_0px_0px_#111827] dark:shadow-[4px_4px_0px_0px_#FFFFFF] hover:translate-y-[-4px] hover:shadow-[6px_6px_0px_0px_#ea580c] dark:hover:shadow-[6px_6px_0px_0px_#ea580c] transition-all duration-300"
   >
-    <div className="flex justify-between items-start mb-2 pointer-events-none">
-      <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[9px] md:text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider line-clamp-1">
-        {item.category}
+    {/* Menggunakan gap-3, flex-1, dan truncate untuk melindungi layout */}
+    <div className="flex justify-between items-start mb-4 gap-3 pointer-events-none">
+      <div className="bg-[#111827] dark:bg-[#FFFFFF] text-[#FFFFFF] dark:text-[#111827] text-[10px] md:text-[12px] font-black px-3 py-1.5 rounded-[4px] uppercase tracking-widest border-[2px] border-[#111827] dark:border-[#FFFFFF] flex-1 overflow-hidden">
+        <div className="truncate w-full">{item.category}</div>
       </div>
-      <div className="text-zinc-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-transform duration-300 -translate-x-1 translate-y-1 group-hover:translate-x-0 group-hover:translate-y-0">
-        <ExternalLink size={14} />
+      
+      {/* shrink-0 mengunci ukuran ikon agar tidak gepeng */}
+      <div className="w-8 h-8 shrink-0 flex items-center justify-center bg-[#ea580c] rounded-[4px] border-[2px] border-[#111827] dark:border-[#FFFFFF] shadow-[2px_2px_0px_0px_#111827] dark:shadow-[2px_2px_0px_0px_#FFFFFF] text-[#FFFFFF] transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
+        <ExternalLink size={16} />
       </div>
     </div>
 
-    <h3 className="text-base md:text-lg font-black text-zinc-900 dark:text-white leading-tight tracking-tight line-clamp-1 pointer-events-none">
+    {/* truncate melindungi judul yang terlalu panjang */}
+    <h3 className="text-[20px] md:text-[24px] font-black text-[#111827] dark:text-[#FFFFFF] uppercase tracking-tighter leading-none truncate pointer-events-none mb-4 group-hover:text-[#ea580c] transition-colors">
       {item.projectName}
     </h3>
 
-    <div className="mt-3 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center gap-1.5 pointer-events-none">
-      <span className="text-[10px] text-zinc-500 font-medium">Peran:</span>
-      <span className="text-[10px] md:text-xs font-bold text-zinc-700 dark:text-zinc-300 line-clamp-1">
+    <div className="mt-auto pt-4 border-t-[3px] border-[#111827]/10 dark:border-[#FFFFFF]/10 flex flex-col gap-1 pointer-events-none overflow-hidden">
+      <span className="text-[10px] text-[#111827]/60 dark:text-[#FFFFFF]/60 font-black uppercase tracking-widest">ROLE</span>
+      {/* truncate melindungi teks role yang terlalu panjang */}
+      <span className="text-[12px] md:text-[14px] font-bold text-[#111827] dark:text-[#FFFFFF] uppercase tracking-tight truncate">
         {item.role}
       </span>
     </div>

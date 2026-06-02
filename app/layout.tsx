@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css"; // Ini sudah pasti benar sesuai foto Anda
+import { IBM_Plex_Mono } from "next/font/google";
+import "./globals.css"; 
 
 import { ThemeProvider } from "../src/components/ThemeProvider";
 import { LanguageProvider } from "../src/components/LanguageProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+const ibmPlexMono = IBM_Plex_Mono({ 
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700"]
+});
 
 export const metadata: Metadata = {
   title: "Afrizal | UI/UX Designer & Frontend Enthusiast",
@@ -19,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className="scroll-smooth" suppressHydrationWarning>
-      <body className={`${inter.className} overflow-x-hidden bg-[#F8F9FA] dark:bg-black text-zinc-900 dark:text-zinc-50`}>
+      <body className={`${ibmPlexMono.className} overflow-x-hidden bg-[#FFFFFF] dark:bg-[#111827] text-[#111827] dark:text-[#FFFFFF]`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -27,6 +30,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <LanguageProvider>  
+            {/* Kembali menggunakan scroll bawaan browser yang natural */}
             {children}
           </LanguageProvider> 
         </ThemeProvider>

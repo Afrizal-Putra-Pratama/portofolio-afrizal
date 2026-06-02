@@ -1,107 +1,141 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
 import { Github, Linkedin, Instagram, ArrowUpRight, MapPin } from "lucide-react";
 import { useLanguage } from "../LanguageProvider";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Footer() {
   const { t, language } = useLanguage();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    gsap.fromTo(
+      ".gsap-footer-reveal",
+      { y: 40, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 85%",
+        },
+      }
+    );
+  }, { scope: containerRef });
 
   return (
-    <footer className="pt-8 pb-20 md:pt-12 md:pb-8 px-4 sm:px-6 lg:px-12 bg-[#F8F9FA] dark:bg-black transition-colors duration-300 flex flex-col justify-center min-h-[50vh]" id="contact">
-      {/* Catatan: Padding bawah (pb-20) diatur lebih besar di mobile agar 
-          konten footer tidak tertutup oleh Floating Bottom Dock Navigasi */}
-      <div className="max-w-5xl mx-auto flex flex-col gap-5 md:gap-6 w-full">
+    <footer 
+      id="contact"
+      ref={containerRef}
+      // min-h-screen DIHAPUS agar tidak memakan ruang kosong, background diubah agar kontras
+      className="relative bg-[#FFFFFF] dark:bg-[#000000] font-mono transition-colors duration-500 overflow-hidden flex flex-col" 
+    >
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes marquee-footer-seamless {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); } 
+        }
+        .animate-marquee-seamless {
+          animation: marquee-footer-seamless 60s linear infinite;
+        }
+      `}} />
+
+      {/* =========================================
+          AREA UTAMA: OVERSIZED CENTERED CTA
+          ========================================= */}
+      {/* Padding py-20 md:py-32 dikecilkan menjadi py-12 md:py-16 agar lebih rapat */}
+      <div className="flex-1 flex flex-col items-center justify-center text-center px-4 py-12 md:py-16 w-full z-10 border-t-[3px] border-[#111827] dark:border-[#FFFFFF]">
         
-        {/* =========================================
-            BAGIAN 1: COMPACT CTA CARD
-            ========================================= */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="relative w-full rounded-[1.5rem] md:rounded-[2rem] bg-zinc-950 dark:bg-zinc-900 overflow-hidden flex flex-col items-center justify-center text-center px-6 py-12 md:py-16 shadow-xl z-10"
+        <h2 className="gsap-footer-reveal text-[13vw] md:text-[9vw] lg:text-[100px] font-black text-[#111827] dark:text-[#FFFFFF] leading-[0.85] tracking-tighter uppercase mb-4 md:mb-6">
+          {language === "id" ? "MULAI PROYEK" : "START A"}<br/>
+          <span className="text-[#ea580c]">
+            {language === "id" ? "BARU" : "NEW PROJECT"}
+          </span>
+        </h2>
+
+        {/* Margin text description diperkecil */}
+        <p className="gsap-footer-reveal text-[#111827]/70 dark:text-[#FFFFFF]/70 text-[14px] md:text-[18px] max-w-xl mb-8 md:mb-10 font-medium">
+          {t.footer.description}
+        </p>
+
+        <a 
+          href="mailto:afrizzalputrapratama@gmail.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="gsap-footer-reveal group flex items-center gap-3 px-6 py-4 md:px-10 md:py-5 bg-[#F4F4F5] dark:bg-[#111827] border-[3px] border-[#111827] dark:border-[#FFFFFF] rounded-full shadow-[6px_6px_0px_0px_#111827] dark:shadow-[6px_6px_0px_0px_#FFFFFF] hover:translate-y-[-4px] hover:shadow-[8px_8px_0px_0px_#ea580c] dark:hover:shadow-[8px_8px_0px_0px_#ea580c] transition-all active:translate-y-[2px] active:shadow-none"
         >
-          {/* Efek Lingkaran Cahaya (Glow) di latar belakang kartu */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-sm h-48 bg-blue-600/20 blur-[80px] rounded-full pointer-events-none" />
-
-          {/* Lencana Status "Available" */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/10 backdrop-blur-md mb-5">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span className="text-zinc-300 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
-              {language === "id" ? "Siap untuk peluang baru" : "Available for new opportunities"}
-            </span>
+          <span className="text-[14px] sm:text-[16px] md:text-[20px] font-bold text-[#111827] dark:text-[#FFFFFF] group-hover:text-[#ea580c] transition-colors lowercase tracking-wide">
+            afrizzalputrapratama@gmail.com
+          </span>
+          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#111827] dark:bg-[#FFFFFF] text-[#FFFFFF] dark:text-[#111827] flex items-center justify-center group-hover:bg-[#ea580c] group-hover:text-[#FFFFFF] transition-colors group-hover:rotate-45">
+            <ArrowUpRight className="w-4 h-4 md:w-5 md:h-5" />
           </div>
+        </a>
 
-          {/* Tipografi Raksasa (Diperkecil Proporsional) */}
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-[5.5vw] font-black text-white leading-[1] tracking-tighter mb-4">
-            {language === "id" ? "MARI BIKIN" : "LET'S BUILD"} <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
-              {language === "id" ? "SESUATU." : "SOMETHING."}
-            </span>
-          </h2>
+      </div>
 
-          <p className="text-zinc-400 text-xs md:text-sm max-w-lg mb-8">
-            {t.footer.description}
+      {/* =========================================
+          BOTTOM DOCK: LOKASI & SOSMED
+          ========================================= */}
+      <div className="w-full border-t-[3px] border-[#111827] dark:border-[#FFFFFF] flex flex-col md:flex-row bg-[#F4F4F5] dark:bg-[#000000] z-10 shrink-0">
+        
+        <div className="flex-1 p-6 flex flex-col justify-center items-center md:items-start border-b-[3px] md:border-b-0 md:border-r-[3px] border-[#111827] dark:border-[#FFFFFF]">
+          <div className="flex items-center gap-2 text-[#111827] dark:text-[#FFFFFF] text-[14px] md:text-[16px] font-black uppercase tracking-widest mb-2">
+            {/* Lokasi diubah menjadi Batang */}
+            <MapPin className="w-5 h-5 text-[#ea580c]" /> Batang, Indonesia
+          </div>
+          <p className="text-[#111827]/60 dark:text-[#FFFFFF]/60 text-[10px] md:text-[12px] font-bold uppercase tracking-widest text-center md:text-left">
+            &copy; {new Date().getFullYear()} Afrizal Putra Pratama.
           </p>
+        </div>
 
-          {/* Tombol Email (Pill Besar, Sedikit Dirampingkan) */}
-          <a 
-            href="mailto:afrizzalputrapratama@gmail.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-2.5 px-6 py-3 md:px-8 md:py-4 bg-blue-600 text-white rounded-full font-black text-xs md:text-sm hover:bg-blue-500 transition-all shadow-[0_0_30px_-10px_rgba(37,99,235,0.5)] hover:shadow-[0_0_50px_-15px_rgba(37,99,235,0.7)] hover:-translate-y-1"
-          >
-            afrizzalputrapratama@gmail.com 
-            <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-blue-600 transition-colors">
-              <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4" />
-            </div>
-          </a>
-        </motion.div>
-
-        {/* =========================================
-            BAGIAN 2: MINIMALIST BASE
-            Sosial Media, Lokasi, dan Signature Personal
-            ========================================= */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-2 px-2 md:px-4">
-          
-          {/* Kiri: Lokasi & Personal Signature */}
-          <div className="flex flex-col items-center md:items-start gap-1.5 text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start gap-1.5 text-zinc-500 dark:text-zinc-400 text-[10px] md:text-xs font-bold">
-              <MapPin className="w-3 h-3 md:w-3.5 md:h-3.5" /> Surakarta, Indonesia
-            </div>
-            <p className="text-zinc-400 dark:text-zinc-500 text-[9px] md:text-[10px] font-medium">
-              &copy; {new Date().getFullYear()} Afrizal. {language === "id" ? "mari membuat sesuatu yang luar biasa." : "let's make something amazing."}
-            </p>
-          </div>
-
-          {/* Kanan: Social Links (Elegan & Lebih Kecil) */}
-          <div className="flex gap-2">
-            {[
-              { icon: Linkedin, link: "https://www.linkedin.com/in/afpupra/" },
-              { icon: Github, link: "https://github.com/Afrizal-Putra-Pratama" },
-              { icon: Instagram, link: "https://www.instagram.com/afzapp" },
-            ].map((social, index) => (
-              <a 
-                key={index} 
-                href={social.link} 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-blue-600 hover:border-blue-200 dark:hover:border-zinc-600 dark:hover:text-white transition-all shadow-sm hover:shadow-md hover:-translate-y-1"
-              >
-                <social.icon className="w-3.5 h-3.5 md:w-4 md:h-4" />
-              </a>
-            ))}
-          </div>
-
+        <div className="flex-1 flex justify-center md:justify-end items-center p-6 gap-4 md:gap-6 bg-[#FFFFFF] dark:bg-[#111827]">
+          {[
+            { name: "LinkedIn", icon: Linkedin, link: "https://www.linkedin.com/in/afpupra/" },
+            { name: "GitHub", icon: Github, link: "https://github.com/Afrizal-Putra-Pratama" },
+            { name: "Instagram", icon: Instagram, link: "https://www.instagram.com/afzapp" },
+          ].map((social, index) => (
+            <a 
+              key={index} 
+              href={social.link} 
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={social.name}
+              className="w-12 h-12 bg-[#FFFFFF] dark:bg-[#111827] border-[3px] border-[#111827] dark:border-[#FFFFFF] rounded-[8px] flex items-center justify-center text-[#111827] dark:text-[#FFFFFF] shadow-[4px_4px_0px_0px_#111827] dark:shadow-[4px_4px_0px_0px_#FFFFFF] hover:bg-[#ea580c] hover:text-[#FFFFFF] dark:hover:bg-[#ea580c] hover:translate-y-[-4px] hover:shadow-[6px_6px_0px_0px_#111827] dark:hover:shadow-[6px_6px_0px_0px_#FFFFFF] transition-all active:translate-y-[2px] active:shadow-none"
+            >
+              <social.icon className="w-5 h-5" />
+            </a>
+          ))}
         </div>
 
       </div>
+
+      {/* =========================================
+          MARQUEE BANNER SEAMLESS (Pita Bawah)
+          ========================================= */}
+      <div className="w-full bg-[#111827] dark:bg-[#FFFFFF] text-[#FFFFFF] dark:text-[#111827] py-3 md:py-4 border-t-[3px] border-[#111827] dark:border-[#FFFFFF] overflow-hidden flex items-center shrink-0">
+        <div className="flex w-max animate-marquee-seamless">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((set) => (
+            <div key={set} className="flex items-center px-2 md:px-4">
+              <span className="text-[12px] md:text-[16px] font-black uppercase tracking-widest whitespace-nowrap">AFRIZAL PUTRA PRATAMA</span>
+              <span className="text-[#a7a7a7] font-black text-[16px] mx-4 md:mx-6">•</span>
+              <span className="text-[12px] md:text-[16px] font-black uppercase tracking-widest whitespace-nowrap">UI/UX DESIGNER</span>
+              <span className="text-[#a7a7a7] font-black text-[16px] mx-4 md:mx-6">•</span>
+              <span className="text-[12px] md:text-[16px] font-black uppercase tracking-widest whitespace-nowrap">WEB DEV ENTHUSIAST</span>
+              <span className="text-[#a7a7a7] font-black text-[16px] mx-4 md:mx-6">•</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </footer>
   );
 }

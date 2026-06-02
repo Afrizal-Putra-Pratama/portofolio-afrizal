@@ -1,13 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import { ExternalLink, Github, X, ArrowRight, LayoutTemplate, Users, Layers, Activity, Component } from "lucide-react";
 import { SiReact, SiLaravel, SiPython, SiFigma, SiMysql, SiFirebase } from "react-icons/si";
 import { useLanguage } from "../LanguageProvider";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// URUTAN BARU: 1. Posturely, 2. Adsa, 3. SheSafe, 4. SDIT
+gsap.registerPlugin(ScrollTrigger);
+
 const projectImages = [
   "/images/projects/posturely.jpg", 
   "/images/projects/adsa.jpg", 
@@ -15,50 +19,36 @@ const projectImages = [
   "/images/projects/sdit.jpg", 
 ];
 
-// URUTAN BARU TAUTAN
 const projectLinks = [
-  { // 1. Posturely (Gold Medal YISF)
-    github: "https://github.com/Afrizal-Putra-Pratama/kidposture-web",
-    demo: null 
-  },
-  { // 2. AdsaWonokerso
-    github: "https://github.com/Afrizal-Putra-Pratama/AdsaWonokerso",
-    demo: "https://adsawonokerso.my.id/"
-  },
-  { // 3. SheSafe
-    github: null, 
-    demo: "https://www.figma.com/proto/NS5Wdu1jaGIMa3MlFgfdhu/Gemastik--25?node-id=1-3&t=jQYEaUOYT7ANoqCD-1"
-  },
-  { // 4. SDIT Financial
-    github: null,
-    demo: "https://www.figma.com/proto/RxqHfsDjv58RuoFAbJsi0Q/Overlogic-SDIT-Project---Overlogic-Universe?node-id=108-2&t=XkVpg8YObXNnHZdO-1"
-  }
+  { github: "https://github.com/Afrizal-Putra-Pratama/kidposture-web", demo: "https://posturely-app.vercel.app/" },
+  { github: "https://github.com/Afrizal-Putra-Pratama/AdsaWonokerso", demo: "https://adsawonokerso.my.id/" },
+  { github: null, demo: "https://www.figma.com/proto/NS5Wdu1jaGIMa3MlFgfdhu/Gemastik--25?node-id=1-3&t=jQYEaUOYT7ANoqCD-1" },
+  { github: null, demo: "https://www.figma.com/proto/RxqHfsDjv58RuoFAbJsi0Q/Overlogic-SDIT-Project---Overlogic-Universe?node-id=108-2&t=XkVpg8YObXNnHZdO-1" }
 ];
 
 const getTechIcon = (tech: string) => {
   const t = tech.toLowerCase();
-  if (t.includes("laravel")) return <SiLaravel className="w-3.5 h-3.5 text-[#FF2D20]" />;
-  if (t.includes("react")) return <SiReact className="w-3.5 h-3.5 text-[#61DAFB]" />;
-  if (t.includes("mysql")) return <SiMysql className="w-3.5 h-3.5 text-[#4479A1]" />;
-  if (t.includes("python")) return <SiPython className="w-3.5 h-3.5 text-[#3776AB]" />;
-  if (t.includes("figma")) return <SiFigma className="w-3.5 h-3.5 text-[#F24E1E]" />;
-  if (t.includes("firebase")) return <SiFirebase className="w-3.5 h-3.5 text-[#FFCA28]" />;
-  if (t.includes("mediapipe")) return <Activity className="w-3.5 h-3.5 text-zinc-500" />;
-  if (t.includes("research") || t.includes("user")) return <Users className="w-3.5 h-3.5 text-zinc-500" />;
-  if (t.includes("wireframe") || t.includes("prototype") || t.includes("system")) return <LayoutTemplate className="w-3.5 h-3.5 text-zinc-500" />;
-  if (t.includes("component")) return <Component className="w-3.5 h-3.5 text-zinc-500" />;
-  return <Layers className="w-3.5 h-3.5 text-zinc-500" />;
+  if (t.includes("laravel")) return <SiLaravel className="w-4 h-4 text-[#FF2D20]" />;
+  if (t.includes("react")) return <SiReact className="w-4 h-4 text-[#61DAFB]" />;
+  if (t.includes("mysql")) return <SiMysql className="w-4 h-4 text-[#4479A1]" />;
+  if (t.includes("python")) return <SiPython className="w-4 h-4 text-[#3776AB]" />;
+  if (t.includes("figma")) return <SiFigma className="w-4 h-4 text-[#F24E1E]" />;
+  if (t.includes("firebase")) return <SiFirebase className="w-4 h-4 text-[#FFCA28]" />;
+  if (t.includes("mediapipe")) return <Activity className="w-4 h-4 text-[#111827] dark:text-[#FFFFFF]" />;
+  if (t.includes("research") || t.includes("user")) return <Users className="w-4 h-4 text-[#111827] dark:text-[#FFFFFF]" />;
+  if (t.includes("wireframe") || t.includes("prototype") || t.includes("system")) return <LayoutTemplate className="w-4 h-4 text-[#111827] dark:text-[#FFFFFF]" />;
+  if (t.includes("component")) return <Component className="w-4 h-4 text-[#111827] dark:text-[#FFFFFF]" />;
+  return <Layers className="w-4 h-4 text-[#111827] dark:text-[#FFFFFF]" />;
 };
 
 export default function Projects() {
   const { t, language } = useLanguage();
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // --- LOGIKA KURSOR MELAYANG (Khusus Desktop) ---
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-
   const springConfig = { damping: 25, stiffness: 120, mass: 0.5 };
   const cursorX = useSpring(mouseX, springConfig);
   const cursorY = useSpring(mouseY, springConfig);
@@ -69,12 +59,10 @@ export default function Projects() {
     } else {
       document.body.style.overflow = "unset";
     }
-
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
     };
-
     window.addEventListener("mousemove", handleMouseMove);
     return () => {
       document.body.style.overflow = "unset";
@@ -82,132 +70,151 @@ export default function Projects() {
     };
   }, [selectedProject, mouseX, mouseY]);
 
+  useGSAP(() => {
+    gsap.fromTo(
+      ".gsap-proj-reveal",
+      { y: 50, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 80%",
+        },
+      }
+    );
+  }, { scope: containerRef });
+
   return (
-    <section className="py-20 md:py-24 px-4 sm:px-6 lg:px-12 bg-[#F8F9FA] dark:bg-black transition-colors duration-300 min-h-screen relative" id="projects">
-      <div className="max-w-5xl mx-auto w-full relative z-10">
+    <section 
+      id="projects" 
+      ref={containerRef}
+      // Background dibuat polos total tanpa grid
+      className="relative min-h-screen py-24 px-4 sm:px-6 lg:px-12 bg-[#F4F4F5] dark:bg-[#111827] font-mono transition-colors duration-500 overflow-hidden"
+    >
+      <div className="max-w-6xl mx-auto w-full relative z-10">
         
-        {/* Header Ukuran Normal */}
-        <motion.div 
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-12 md:mb-16 flex flex-col items-start"
-        >
-          <div className="w-10 h-1 bg-blue-600 rounded-full mb-4" />
-          <h2 className="text-3xl md:text-4xl font-black text-zinc-900 dark:text-white tracking-tight uppercase mb-3">
+        {/* =========================================
+            HEADER SECTION (Lebih Bersih)
+            ========================================= */}
+        <div className="gsap-proj-reveal mb-12 md:mb-20 flex flex-col items-start text-left">
+          {/* Badge PORTFOLIO dihapus sesuai permintaan */}
+          <h2 className="text-[40px] md:text-[64px] lg:text-[80px] font-black text-[#111827] dark:text-[#FFFFFF] tracking-tighter uppercase leading-[0.9]">
             {t.projects.title}
           </h2>
-          <p className="text-zinc-600 dark:text-zinc-400 text-sm md:text-base max-w-xl">
+          <p className="mt-4 md:mt-6 text-[#111827]/70 dark:text-[#FFFFFF]/70 text-[14px] md:text-[18px] max-w-xl font-medium">
             {t.projects.subtitle}
           </p>
-        </motion.div>
+        </div>
 
         {/* =========================================
-            TAMPILAN DESKTOP: Typography Hover Reveal
+            TAMPILAN DESKTOP: Brutalist List Hover
             ========================================= */}
-        <div className="hidden md:flex flex-col w-full border-t border-zinc-200 dark:border-zinc-800">
+        <div className="hidden md:flex flex-col w-full border-t-[3px] border-[#111827] dark:border-[#FFFFFF]">
           {t.projects.items.map((project, index) => (
-            <motion.div
+            <div
               key={`desktop-proj-${index}`}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
               onMouseEnter={() => setHoveredProject(index)}
               onMouseLeave={() => setHoveredProject(null)}
               onClick={() => setSelectedProject(index)}
-              className="group relative flex items-center justify-between py-6 lg:py-8 border-b border-zinc-200 dark:border-zinc-800 cursor-pointer hover:bg-white/50 dark:hover:bg-zinc-900/20 px-4 -mx-4 rounded-xl transition-colors duration-300"
+              // Sudut hover dibuat kotak membulat tipis (rounded-[8px])
+              className="gsap-proj-reveal group relative flex items-center justify-between py-8 border-b-[3px] border-[#111827] dark:border-[#FFFFFF] cursor-pointer hover:bg-[#ea580c] transition-colors duration-300 px-6 -mx-6 rounded-[8px]"
             >
-              <div className="flex items-center gap-6 lg:gap-8 relative z-10 pointer-events-none">
-                <span className="text-zinc-400 dark:text-zinc-600 font-bold text-xs lg:text-sm transition-colors group-hover:text-blue-600">
+              <div className="flex items-center gap-8 relative z-10 pointer-events-none">
+                <span className="text-[#111827]/40 dark:text-[#FFFFFF]/40 font-black text-[24px] transition-colors group-hover:text-[#FFFFFF]/80">
                   0{index + 1}
                 </span>
-                <h3 className="text-2xl lg:text-3xl font-black text-zinc-500 dark:text-zinc-500 uppercase tracking-tight transition-all duration-300 group-hover:text-zinc-900 dark:group-hover:text-white group-hover:translate-x-2">
+                <h3 className="text-[32px] lg:text-[48px] font-black text-[#111827] dark:text-[#FFFFFF] uppercase tracking-tighter transition-all duration-300 group-hover:text-[#FFFFFF] group-hover:translate-x-4">
                   {project.title}
                 </h3>
               </div>
               
-              <div className="flex items-center gap-6 relative z-10 pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="text-[10px] lg:text-xs font-bold text-zinc-500 uppercase tracking-widest transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400">
+              <div className="flex items-center gap-6 relative z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-x-4 group-hover:translate-x-0">
+                <span className="text-[14px] font-bold text-[#FFFFFF] uppercase tracking-widest border-2 border-[#FFFFFF] px-4 py-1.5 rounded-[8px]">
                   {project.category.split("•")[0]}
                 </span>
-                <div className="w-8 h-8 rounded-full border border-zinc-300 dark:border-zinc-700 flex items-center justify-center group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:text-white transition-all duration-300">
-                  <ArrowRight className="w-4 h-4 text-zinc-400 group-hover:text-white -rotate-45 transition-transform duration-300 group-hover:rotate-0" />
+                <div className="w-12 h-12 rounded-[8px] border-[3px] border-[#FFFFFF] flex items-center justify-center bg-[#FFFFFF] transition-all duration-300">
+                  <ArrowRight className="w-6 h-6 text-[#ea580c] -rotate-45" />
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* =========================================
-            TAMPILAN MOBILE: List Kartu Bersih
+            TAMPILAN MOBILE: Compact List (Hemat Ruang)
             ========================================= */}
-        <div className="flex flex-col gap-6 md:hidden">
+        <div className="flex flex-col gap-4 md:hidden">
           {t.projects.items.map((project, index) => (
-            <motion.div
+            <div
               key={`mobile-proj-${index}`}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
               onClick={() => setSelectedProject(index)}
-              className="group flex flex-col gap-3 cursor-pointer"
+              // Bentuk kartu memanjang ke samping, sudut rounded-lg (8px), shadow lebih kecil
+              className="gsap-proj-reveal group flex items-center bg-[#FFFFFF] dark:bg-[#111827] border-[3px] border-[#111827] dark:border-[#FFFFFF] rounded-[8px] p-3 cursor-pointer shadow-[4px_4px_0px_0px_#111827] dark:shadow-[4px_4px_0px_0px_#FFFFFF] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#111827] dark:hover:shadow-[2px_2px_0px_0px_#FFFFFF] transition-all active:translate-y-[4px] active:shadow-none"
             >
-              <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden bg-zinc-200 dark:bg-zinc-900 shadow-sm border border-zinc-200 dark:border-zinc-800">
-                <Image src={projectImages[index % projectImages.length]} alt={project.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+              {/* Gambar Thumb - Kotak kecil di kiri */}
+              <div className="relative w-20 h-20 sm:w-24 sm:h-24 shrink-0 border-[2px] border-[#111827] dark:border-[#FFFFFF] rounded-[6px] overflow-hidden bg-[#111827]/5">
+                <Image 
+                  src={projectImages[index % projectImages.length]} 
+                  alt={project.title} 
+                  fill 
+                  className="object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" 
+                />
               </div>
-              <div className="px-1">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-blue-600 dark:text-blue-500 font-bold text-[9px] uppercase tracking-widest">
-                    0{index + 1} {project.category.split("•")[0]}
+              
+              {/* Detail Teks */}
+              <div className="ml-4 flex-1 flex flex-col justify-center overflow-hidden">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[#ea580c] font-black text-[10px] sm:text-[12px] uppercase tracking-widest line-clamp-1">
+                    0{index + 1} • {project.category.split("•")[0]}
                   </span>
                 </div>
-                <h3 className="text-xl font-black text-zinc-900 dark:text-white tracking-tight leading-tight mb-1">
+                <h3 className="text-[18px] sm:text-[20px] font-black text-[#111827] dark:text-[#FFFFFF] uppercase tracking-tight leading-tight line-clamp-1 mb-1">
                   {project.title}
                 </h3>
-                <p className="text-zinc-500 dark:text-zinc-400 text-xs line-clamp-2">
+                <p className="text-[#111827]/70 dark:text-[#FFFFFF]/70 text-[12px] sm:text-[14px] line-clamp-1 font-medium">
                   {project.description}
                 </p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
       </div>
 
       {/* =========================================
-          FLOATING IMAGE KURSOR
+          FLOATING IMAGE KURSOR (Desktop Only)
           ========================================= */}
       <motion.div
-        className="fixed top-0 left-0 w-[280px] lg:w-[320px] aspect-[4/3] rounded-xl overflow-hidden pointer-events-none z-50 hidden md:block shadow-2xl border border-white/10"
-        style={{
-          x: cursorX,
-          y: cursorY,
-          translateX: "-50%",
-          translateY: "-50%",
-        }}
-        initial={{ opacity: 0, scale: 0.5, rotate: -5 }}
+        // Mengurangi border-radius kursor menjadi rounded-[8px]
+        className="fixed top-0 left-0 w-[300px] lg:w-[400px] aspect-[4/3] rounded-[8px] overflow-hidden pointer-events-none z-50 hidden md:block border-[3px] border-[#111827] dark:border-[#FFFFFF] shadow-[6px_6px_0px_0px_#ea580c]"
+        style={{ x: cursorX, y: cursorY, translateX: "-50%", translateY: "-50%" }}
+        initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
         animate={{
           opacity: hoveredProject !== null ? 1 : 0,
           scale: hoveredProject !== null ? 1 : 0.5,
-          rotate: hoveredProject !== null ? 0 : -5,
+          rotate: hoveredProject !== null ? 5 : -10,
         }}
-        transition={{ duration: 0.3, ease: "backOut" }}
+        transition={{ duration: 0.4, ease: "backOut" }}
       >
         <AnimatePresence mode="wait">
           {hoveredProject !== null && (
             <motion.div
               key={hoveredProject}
-              initial={{ opacity: 0, scale: 1.1 }}
+              initial={{ opacity: 0, scale: 1.2 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="absolute inset-0"
+              className="absolute inset-0 bg-[#F4F4F5] dark:bg-[#000000]"
             >
               <Image 
                 src={projectImages[hoveredProject % projectImages.length]} 
                 alt="Preview" 
                 fill 
-                className="object-cover" 
+                className="object-cover grayscale" 
                 priority 
               />
             </motion.div>
@@ -220,112 +227,95 @@ export default function Projects() {
           ========================================= */}
       <AnimatePresence>
         {selectedProject !== null && (
-          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6">
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+            {/* Backdrop */}
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedProject(null)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer"
+              className="absolute inset-0 bg-[#111827]/80 backdrop-blur-sm cursor-pointer"
             />
             
+            {/* Modal Container: rounded-[12px] "Kotak tapi ga terlalu kotak" */}
             <motion.div 
-              initial={{ scale: 0.95, opacity: 0, y: 15 }}
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 15 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-2xl max-h-[85vh] bg-white dark:bg-zinc-950 rounded-[1.5rem] md:rounded-[2rem] overflow-hidden shadow-2xl flex flex-col z-10 border border-zinc-200 dark:border-zinc-800"
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              className="relative w-full max-w-3xl max-h-[90vh] bg-[#FFFFFF] dark:bg-[#111827] rounded-[12px] overflow-hidden shadow-[8px_8px_0px_0px_#ea580c] flex flex-col z-10 border-[3px] border-[#111827] dark:border-[#FFFFFF]"
             >
-              <div className="overflow-y-auto flex-1 custom-scrollbar">
+              
+              {/* Header Modal - Image & Close */}
+              <div className="relative w-full h-[200px] sm:h-[300px] bg-[#111827]/5 border-b-[3px] border-[#111827] dark:border-[#FFFFFF] shrink-0">
+                <Image src={projectImages[selectedProject % projectImages.length]} alt={t.projects.items[selectedProject].title} fill className="object-cover" />
+                <button 
+                  onClick={() => setSelectedProject(null)} 
+                  className="absolute top-4 right-4 p-2 border-[3px] border-[#111827] dark:border-[#FFFFFF] bg-[#FFFFFF] dark:bg-[#111827] text-[#111827] dark:text-[#FFFFFF] rounded-[8px] transition-colors hover:bg-[#ea580c] hover:text-[#FFFFFF] dark:hover:bg-[#ea580c] focus-visible:outline-none"
+                >
+                  <X className="w-5 h-5 md:w-6 md:h-6" />
+                </button>
+              </div>
+
+              {/* Body Modal */}
+              <div className="overflow-y-auto flex-1 custom-scrollbar p-6 md:p-8">
                 
-                <div className="relative w-full h-[200px] sm:h-[300px] bg-zinc-100 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 shrink-0">
-                  <Image src={projectImages[selectedProject % projectImages.length]} alt={t.projects.items[selectedProject].title} fill className="object-cover" />
-                  <button onClick={() => setSelectedProject(null)} className="absolute top-4 right-4 p-2.5 bg-black/50 hover:bg-black/80 text-white rounded-full backdrop-blur-md transition-colors shadow-sm">
-                    <X className="w-5 h-5" />
-                  </button>
+                <div className="mb-6">
+                  <span className="inline-block px-4 py-1.5 rounded-[6px] border-2 border-[#111827] dark:border-[#FFFFFF] bg-[#ea580c] text-[#FFFFFF] text-[12px] font-black uppercase tracking-widest mb-4 shadow-[2px_2px_0px_0px_#111827] dark:shadow-[2px_2px_0px_0px_#FFFFFF]">
+                    {t.projects.items[selectedProject].category}
+                  </span>
+                  <h3 className="text-[32px] md:text-[48px] font-black text-[#111827] dark:text-[#FFFFFF] uppercase tracking-tighter leading-[0.9]">
+                    {t.projects.items[selectedProject].title}
+                  </h3>
                 </div>
 
-                <div className="p-6 md:p-8 lg:p-10">
-                  <div className="mb-6">
-                    <span className="inline-block px-3 py-1.5 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[10px] font-bold uppercase tracking-widest mb-4">
-                      {t.projects.items[selectedProject].category}
-                    </span>
-                    <h3 className="text-3xl md:text-4xl font-black text-zinc-900 dark:text-white tracking-tight leading-tight">
-                      {t.projects.items[selectedProject].title}
-                    </h3>
+                <p className="text-[#111827]/80 dark:text-[#FFFFFF]/80 text-[14px] md:text-[16px] leading-relaxed font-medium mb-8">
+                  {t.projects.items[selectedProject].description}
+                </p>
+
+                {/* Tech Stack */}
+                {/* rounded diubah ke [8px] */}
+                <div className="mb-8 p-5 md:p-6 bg-[#FFFFFF] dark:bg-[#111827] rounded-[8px] border-[3px] border-[#111827] dark:border-[#FFFFFF] shadow-[4px_4px_0px_0px_#111827] dark:shadow-[4px_4px_0px_0px_#FFFFFF]">
+                  <h4 className="text-[14px] font-black text-[#111827] dark:text-[#FFFFFF] uppercase tracking-widest mb-4">Tech Stack</h4>
+                  <div className="flex flex-wrap gap-3">
+                    {t.projects.items[selectedProject].tech.map((techItem, i) => (
+                      <span key={i} className="flex items-center gap-2 px-3 py-1.5 bg-[#F4F4F5] dark:bg-[#000000] text-[#111827] dark:text-[#FFFFFF] text-[12px] font-bold uppercase rounded-[6px] border-2 border-[#111827]/10 dark:border-[#FFFFFF]/10">
+                        {getTechIcon(techItem)}
+                        {techItem}
+                      </span>
+                    ))}
                   </div>
+                </div>
 
-                  <div className="mb-8">
-                    <p className="text-zinc-600 dark:text-zinc-400 text-sm md:text-base leading-relaxed">
-                      {t.projects.items[selectedProject].description}
-                    </p>
-                  </div>
-
-                  <div className="mb-8 p-5 md:p-6 bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl border border-zinc-100 dark:border-zinc-800/50">
-                    <h4 className="text-[11px] font-bold text-zinc-900 dark:text-white uppercase tracking-widest mb-4">Teknologi & Perangkat</h4>
-                    <div className="flex flex-wrap gap-2.5">
-                      {t.projects.items[selectedProject].tech.map((techItem, i) => (
-                        <span key={i} className="flex items-center gap-2 px-3.5 py-2 bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 text-xs font-bold rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-sm">
-                          {getTechIcon(techItem)}
-                          {techItem}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* LOGIKA TOMBOL GITHUB & DEMO */}
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-zinc-200 dark:border-zinc-800">
-                    <div className="flex w-full sm:w-auto gap-3 order-2 sm:order-1">
-                      
-                      {/* Tombol GitHub (Hanya render jika URL-nya ada) */}
-                      {projectLinks[selectedProject % projectLinks.length].github && (
-                        <a 
-                          href={projectLinks[selectedProject % projectLinks.length].github!}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-900 dark:text-white font-bold text-sm rounded-xl transition-colors"
-                        >
-                          <Github className="w-4 h-4" /> Code
-                        </a>
-                      )}
-
-                      {/* Tombol Demo (Menyusul / Link Figma / Live App) */}
-                      {projectLinks[selectedProject % projectLinks.length].demo ? (
-                        <a 
-                          href={projectLinks[selectedProject % projectLinks.length].demo!}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-7 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl transition-all shadow-md shadow-blue-600/20"
-                        >
-                          <ExternalLink className="w-4 h-4" /> Demo
-                        </a>
-                      ) : (
-                        <div className="relative group flex-1 sm:flex-none flex">
-                          <button disabled className="w-full flex items-center justify-center gap-2 px-7 py-3.5 bg-zinc-200 dark:bg-zinc-800/80 text-zinc-400 dark:text-zinc-500 font-bold text-sm rounded-xl cursor-not-allowed transition-colors">
-                            <ExternalLink className="w-4 h-4" /> Demo
-                          </button>
-                          {/* Tooltip Segera Menyusul */}
-                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-1.5 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl z-10">
-                            {language === "id" ? "Segera Menyusul" : "Coming Soon"}
-                            {/* Panah bawah tooltip */}
-                            <svg className="absolute text-zinc-900 dark:text-white h-2 w-full left-0 top-full" x="0px" y="0px" viewBox="0 0 255 255" xmlSpace="preserve">
-                              <polygon className="fill-current" points="0,0 127.5,127.5 255,0"/>
-                            </svg>
-                          </div>
-                        </div>
-                      )}
-
-                    </div>
-                    
-                    <button 
-                      onClick={() => setSelectedProject(null)} 
-                      className="w-full sm:w-auto px-6 py-3.5 bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 font-bold text-sm rounded-xl transition-colors order-1 sm:order-2 flex items-center justify-center gap-2"
+                {/* Action Buttons (GitHub & Demo) */}
+                {/* Tombol dibuat rounded-[8px] agar selaras kotak */}
+                <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
+                  {projectLinks[selectedProject % projectLinks.length].github && (
+                    <a 
+                      href={projectLinks[selectedProject % projectLinks.length].github!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-[#FFFFFF] dark:bg-[#111827] text-[#111827] dark:text-[#FFFFFF] font-black text-[14px] uppercase tracking-widest rounded-[8px] border-[3px] border-[#111827] dark:border-[#FFFFFF] transition-all shadow-[4px_4px_0px_0px_#111827] dark:shadow-[4px_4px_0px_0px_#FFFFFF] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#111827] dark:hover:shadow-[2px_2px_0px_0px_#FFFFFF] active:translate-y-[4px] active:shadow-none"
                     >
-                      Tutup modal
+                      <Github className="w-5 h-5" /> CODE
+                    </a>
+                  )}
+
+                  {projectLinks[selectedProject % projectLinks.length].demo ? (
+                    <a 
+                      href={projectLinks[selectedProject % projectLinks.length].demo!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-[#ea580c] text-[#FFFFFF] font-black text-[14px] uppercase tracking-widest rounded-[8px] border-[3px] border-[#111827] dark:border-[#FFFFFF] transition-all shadow-[4px_4px_0px_0px_#111827] dark:shadow-[4px_4px_0px_0px_#FFFFFF] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#111827] dark:hover:shadow-[2px_2px_0px_0px_#FFFFFF] active:translate-y-[4px] active:shadow-none"
+                    >
+                      <ExternalLink className="w-5 h-5" /> DEMO
+                    </a>
+                  ) : (
+                    <button disabled className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-[#111827]/10 dark:bg-[#FFFFFF]/10 text-[#111827]/40 dark:text-[#FFFFFF]/40 font-black text-[14px] uppercase tracking-widest rounded-[8px] border-[3px] border-[#111827]/10 dark:border-[#FFFFFF]/10 cursor-not-allowed">
+                      <ExternalLink className="w-5 h-5" /> SOON
                     </button>
-                  </div>
+                  )}
                 </div>
-                
+
               </div>
             </motion.div>
           </div>
