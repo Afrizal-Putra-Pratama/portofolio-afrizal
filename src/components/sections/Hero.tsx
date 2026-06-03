@@ -29,17 +29,46 @@ export default function Hero() {
     return () => clearInterval(roleInterval);
   }, []); 
 
+  // ==========================================
+  // PEROMBAKAN GSAP: MENUNGGU ABA-ABA PRELOADER
+  // ==========================================
   useGSAP(() => {
-    const tl = gsap.timeline();
-    tl.from(".gsap-reveal", {
-      y: 40,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.1,
-      ease: "power3.out",
-      delay: 0.2,
-    });
+    // 1. Set semua elemen animasi agar bersembunyi (transparan & turun ke bawah) sejak awal
+    gsap.set(".gsap-reveal", { y: 40, opacity: 0 });
 
+    // 2. Fungsi untuk menjalankan animasi masuk
+    const playRevealAnimation = () => {
+      gsap.to(".gsap-reveal", {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+        delay: 0.2, // Sedikit jeda agar sinkron dengan pintunya terbuka
+      });
+    };
+
+    // 3. Logika pengecekan Session
+    const hasLoaded = sessionStorage.getItem("preloader_shown");
+
+    if (hasLoaded) {
+      // Jika user merefresh web (preloader tidak muncul), langsung jalankan animasi
+      playRevealAnimation();
+    } else {
+      // Jika pertama kali buka, TUNGGU aba-aba "preloaderDone"
+      const handlePreloaderDone = () => {
+        playRevealAnimation();
+      };
+
+      window.addEventListener("preloaderDone", handlePreloaderDone);
+
+      // Bersihkan event listener saat komponen dilepas
+      return () => {
+        window.removeEventListener("preloaderDone", handlePreloaderDone);
+      };
+    }
+
+    // 4. Parallax Background (Tetap berjalan sesuai scroll, tidak terpengaruh preloader)
     let mm = gsap.matchMedia();
     mm.add("(min-width: 768px)", () => {
       gsap.to(bgRef.current, {
@@ -77,7 +106,6 @@ export default function Hero() {
   return (
     <section 
       ref={containerRef} 
-      // Padding top diperbesar (pt-32 md:pt-40) agar aman dari navbar yang melayang
       className="relative min-h-[100svh] flex flex-col items-center justify-center px-4 md:px-6 pt-32 pb-24 md:pt-40 md:pb-28 overflow-hidden bg-[#F4F4F5] dark:bg-[#111827] font-mono transition-colors duration-500"
     >
       <style dangerouslySetInnerHTML={{ __html: `
@@ -97,17 +125,11 @@ export default function Hero() {
       />
 
       {/* 2. KONTEN UTAMA */}
-      {/* Margin negatif dihapus sepenuhnya agar layout fleksibel dan tidak menabrak atas */}
       <div ref={textRef} className="relative z-20 w-full max-w-[90vw] flex flex-col items-center text-center will-change-transform">
         
-        {/* ==============================================
-            FOTO ID CARD (HANYA MUNCUL DI MOBILE / md:hidden)
-            Gaya Brutalist/Expressive
-            ============================================== */}
+        {/* FOTO ID CARD (HANYA MUNCUL DI MOBILE / md:hidden) */}
         <div className="gsap-reveal flex md:hidden justify-center items-center mb-8 w-full mt-4">
           <div className="relative w-[150px] bg-[#FFFFFF] dark:bg-[#111827] p-2.5 rounded-[20px] border-[3px] border-[#111827] dark:border-[#FFFFFF] shadow-[6px_6px_0px_0px_#ea580c] rotate-[-5deg]">
-            
-            {/* Inner Image */}
             <div className="relative w-full aspect-[4/5] rounded-[12px] overflow-hidden border-[3px] border-[#111827] dark:border-[#FFFFFF] bg-[#F4F4F5] dark:bg-[#000000]">
               <Image 
                 src="/images/afrizal.png" 
@@ -118,18 +140,13 @@ export default function Hero() {
                 priority 
               />
             </div>
-            
-            {/* Lanyard Hole (Lubang ID Card) */}
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-10 h-3.5 bg-[#FFFFFF] dark:bg-[#111827] rounded-full border-[3px] border-[#111827] dark:border-[#FFFFFF]" />
-            
-            {/* Aksen Stiker/Label khas desain Expressive */}
             <div className="absolute -bottom-3 -right-3 bg-[#ea580c] text-[#FFFFFF] text-[10px] font-black px-3 py-1 rounded-full border-[2px] border-[#111827] dark:border-[#FFFFFF] rotate-[12deg] shadow-[2px_2px_0px_0px_rgba(17,24,39,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
               HELLO!
             </div>
-
           </div>
         </div>
-        {/* ============================================== */}
+
         {/* NAMA - 1 Baris */}
         <h1 className="gsap-reveal text-[28px] sm:text-[40px] md:text-[5vw] lg:text-[76px] font-black tracking-tighter leading-none text-[#111827] dark:text-[#FFFFFF] mb-2 md:mb-4 uppercase whitespace-nowrap">
           AFRIZAL PUTRA PRATAMA
@@ -175,14 +192,10 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* 3. MARQUEE BANNER (Seamless Loop Diperbaiki) */}
+      {/* 3. MARQUEE BANNER */}
       <div className="gsap-reveal absolute bottom-0 left-0 w-full z-10 shadow-2xl">
         <div className="w-full bg-[#111827] dark:bg-[#FFFFFF] text-[#FFFFFF] dark:text-[#111827] py-3 md:py-4 flex overflow-hidden border-t-[3px] border-[#ea580c]">
-          
-          {/* w-max penting agar kontainer sepanjang isi teks, translateX -50% akan menggeser tepat separuhnya */}
           <div className="flex w-max animate-marquee-fast">
-            
-            {/* Loop 8 Set agar panjangnya menutupi layar terlebar tanpa jeda kosong */}
             {[1, 2, 3, 4, 5, 6, 7, 8].map((set) => (
               <div key={set} className="flex items-center">
                 <SkillItem name="UI/UX Designer" />
@@ -192,9 +205,7 @@ export default function Hero() {
                 <SkillItem name="Team Management" />
               </div>
             ))}
-
           </div>
-
         </div>
       </div>
 

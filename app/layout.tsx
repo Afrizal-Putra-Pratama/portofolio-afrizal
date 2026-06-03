@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono } from "next/font/google";
 import "./globals.css"; 
-
+import Preloader from "@/src/components/Preloader";
 import { ThemeProvider } from "../src/components/ThemeProvider";
 import { LanguageProvider } from "../src/components/LanguageProvider";
 
@@ -23,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="id" className="scroll-smooth" suppressHydrationWarning>
       <body className={`${ibmPlexMono.className} overflow-x-hidden bg-[#FFFFFF] dark:bg-[#111827] text-[#111827] dark:text-[#FFFFFF]`}>
+        <Preloader />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
