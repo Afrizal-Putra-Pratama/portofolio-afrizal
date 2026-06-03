@@ -19,18 +19,18 @@ interface ArchiveItem {
 }
 
 const archiveLinks = [
-  "https://www.figma.com/proto/zJMPCRney6lcxfUp5r5Wup/CAPSTONE?node-id=328-1609&t=u5cHQxKk3J2Du3VE-1", // 1. Signargi
-  "https://www.figma.com/proto/lAcwho98VwPjYi7EXoSYTM/Techno?node-id=0-1&t=KnTxjD5cwcZ3oKLU-1", // 2. Platipus
-  "https://www.figma.com/proto/8ti5er1MGp3FvrPjNX9fa3/Lomba-Riset-Sawit?node-id=27-2890&starting-point-node-id=12%3A88", // 3. Satern
-  "https://www.figma.com/proto/KvMj06JQKeVmduwgs8J3pd/Eco-Actions?node-id=0-1&t=Tzic8cc3NCMxtNZh-1", // 4. EcoAction
-  "https://www.figma.com/proto/igJjQpJVwxEWrVrgrTNPBa/Dinacom-Ui---Girantra?node-id=15-98&t=q0j8uMmmB2ArQ7TQ-1", // 5. Girantra
-  "https://www.figma.com/proto/RMb1Ard8N96zbNk9SGLrTj/UMKM-Tas-Bu-Hartono?node-id=738-1728&t=8kIjRmuLz616nF12-1", // 6. Toko Buhartono
-  "https://www.figma.com/proto/T6E9hAV1xkztl9cDGacLJN/parky?node-id=313-424&t=deKF589IApW07A6J-1", // 7. Parky
-  "https://www.figma.com/proto/lQl9nhpII1kLuXNBijU1mi/quran-qolbu?node-id=17-154&t=zU1oxLDHZCLKJcTK-1", // 8. Quran Qolbu
-  "https://www.figma.com/proto/OzoIxZGinwMz7wpYsU4Yo4/BIG-PROJET?node-id=54-222", // 9. UMS UIID 
-  "https://www.figma.com/proto/ccpavcW9mk9Z6uiQNmUZM1/Tugas-APS-%7C-IMK?node-id=0-1&t=WJ7hsLWdENp6fJm3-1", // 10. Capcut App
-  "https://www.figma.com/design/c801KY8hyBAKxZtZhhPYOz/OVER-CONTENT?node-id=0-1&t=cC4xVCPE3VMBpPYd-1", // 11. Overcontent
-  "https://www.figma.com/design/tadFm4F3wf8Lore0IedT4q/ID-CARD-WAVE-PROJECT?node-id=0-1&t=dezTSWsJt3o9boB1-1" // 12. Dewave
+  "https://www.figma.com/proto/zJMPCRney6lcxfUp5r5Wup/CAPSTONE?node-id=328-1609&t=u5cHQxKk3J2Du3VE-1", 
+  "https://www.figma.com/proto/lAcwho98VwPjYi7EXoSYTM/Techno?node-id=0-1&t=KnTxjD5cwcZ3oKLU-1", 
+  "https://www.figma.com/proto/8ti5er1MGp3FvrPjNX9fa3/Lomba-Riset-Sawit?node-id=27-2890&starting-point-node-id=12%3A88", 
+  "https://www.figma.com/proto/KvMj06JQKeVmduwgs8J3pd/Eco-Actions?node-id=0-1&t=Tzic8cc3NCMxtNZh-1", 
+  "https://www.figma.com/proto/igJjQpJVwxEWrVrgrTNPBa/Dinacom-Ui---Girantra?node-id=15-98&t=q0j8uMmmB2ArQ7TQ-1", 
+  "https://www.figma.com/proto/RMb1Ard8N96zbNk9SGLrTj/UMKM-Tas-Bu-Hartono?node-id=738-1728&t=8kIjRmuLz616nF12-1", 
+  "https://www.figma.com/proto/T6E9hAV1xkztl9cDGacLJN/parky?node-id=313-424&t=deKF589IApW07A6J-1", 
+  "https://www.figma.com/proto/lQl9nhpII1kLuXNBijU1mi/quran-qolbu?node-id=17-154&t=zU1oxLDHZCLKJcTK-1", 
+  "https://www.figma.com/proto/OzoIxZGinwMz7wpYsU4Yo4/BIG-PROJET?node-id=54-222",  
+  "https://www.figma.com/proto/ccpavcW9mk9Z6uiQNmUZM1/Tugas-APS-%7C-IMK?node-id=0-1&t=WJ7hsLWdENp6fJm3-1", 
+  "https://www.figma.com/design/c801KY8hyBAKxZtZhhPYOz/OVER-CONTENT?node-id=0-1&t=cC4xVCPE3VMBpPYd-1", 
+  "https://www.figma.com/design/tadFm4F3wf8Lore0IedT4q/ID-CARD-WAVE-PROJECT?node-id=0-1&t=dezTSWsJt3o9boB1-1" 
 ];
 
 export default function Archive() {
@@ -78,9 +78,7 @@ export default function Archive() {
       `}} />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 mb-16 md:mb-24 flex flex-col items-center md:items-start text-center md:text-left relative z-10">
-        
         <div className="gsap-arc-reveal flex flex-col items-center md:items-start">
-          
           <h2 className="text-[40px] md:text-[64px] lg:text-[80px] font-black text-[#111827] dark:text-[#FFFFFF] tracking-tighter uppercase leading-[0.9]">
             {t.archive.title}
           </h2>
@@ -88,7 +86,6 @@ export default function Archive() {
             {t.archive.subtitle}
           </p>
         </div>
-
       </div>
 
       <div className="gsap-arc-reveal relative w-full max-w-[100vw] flex flex-col gap-4 md:gap-5 z-20">
@@ -102,7 +99,7 @@ export default function Archive() {
 }
 
 /* =========================================
-   KOMPONEN TICKER ROW (DRAGGABLE & AUTO-SCROLL)
+   KOMPONEN TICKER ROW (DIPERBAIKI)
    ========================================= */
 interface TickerRowProps {
   items: ArchiveItem[];
@@ -161,13 +158,11 @@ const TickerRow = ({ items, direction, speedMultiplier = 1 }: TickerRowProps) =>
     startX.current = clientX - (containerRef.current?.offsetLeft || 0);
     scrollLeft.current = containerRef.current?.scrollLeft || 0;
     
-    if (containerRef.current) containerRef.current.style.pointerEvents = "none";
+    // PERBAIKAN: pointerEvents tidak dimatikan di sini agar tap tetap terbaca
   };
 
   const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isDragging.current || !containerRef.current) return;
-    
-    if (e.cancelable) e.preventDefault(); 
     
     let clientX = 0;
     if ('touches' in e) {
@@ -178,6 +173,13 @@ const TickerRow = ({ items, direction, speedMultiplier = 1 }: TickerRowProps) =>
 
     const x = clientX - containerRef.current.offsetLeft;
     const walk = (x - startX.current) * 2; 
+
+    // PERBAIKAN: Hanya matikan pointerEvents (blokir klik) JIKA user menggeser lebih dari 5px
+    if (Math.abs(x - startX.current) > 5) {
+      if (e.cancelable) e.preventDefault(); 
+      containerRef.current.style.pointerEvents = "none";
+    }
+
     containerRef.current.scrollLeft = scrollLeft.current - walk;
   };
 
@@ -217,7 +219,7 @@ const TickerRow = ({ items, direction, speedMultiplier = 1 }: TickerRowProps) =>
 };
 
 /* =========================================
-   KOMPONEN KARTU NEO-BRUTALIST (DIPERBAIKI)
+   KOMPONEN KARTU NEO-BRUTALIST
    ========================================= */
 const ArchiveCard = ({ item }: { item: ArchiveItem }) => (
   <a 
@@ -227,26 +229,22 @@ const ArchiveCard = ({ item }: { item: ArchiveItem }) => (
     draggable={false} 
     className="group w-[260px] md:w-[320px] shrink-0 bg-[#FFFFFF] dark:bg-[#111827] border-[3px] border-[#111827] dark:border-[#FFFFFF] rounded-[8px] p-5 flex flex-col shadow-[4px_4px_0px_0px_#111827] dark:shadow-[4px_4px_0px_0px_#FFFFFF] hover:translate-y-[-4px] hover:shadow-[6px_6px_0px_0px_#ea580c] dark:hover:shadow-[6px_6px_0px_0px_#ea580c] transition-all duration-300"
   >
-    {/* Menggunakan gap-3, flex-1, dan truncate untuk melindungi layout */}
     <div className="flex justify-between items-start mb-4 gap-3 pointer-events-none">
       <div className="bg-[#111827] dark:bg-[#FFFFFF] text-[#FFFFFF] dark:text-[#111827] text-[10px] md:text-[12px] font-black px-3 py-1.5 rounded-[4px] uppercase tracking-widest border-[2px] border-[#111827] dark:border-[#FFFFFF] flex-1 overflow-hidden">
         <div className="truncate w-full">{item.category}</div>
       </div>
       
-      {/* shrink-0 mengunci ukuran ikon agar tidak gepeng */}
       <div className="w-8 h-8 shrink-0 flex items-center justify-center bg-[#ea580c] rounded-[4px] border-[2px] border-[#111827] dark:border-[#FFFFFF] shadow-[2px_2px_0px_0px_#111827] dark:shadow-[2px_2px_0px_0px_#FFFFFF] text-[#FFFFFF] transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
         <ExternalLink size={16} />
       </div>
     </div>
 
-    {/* truncate melindungi judul yang terlalu panjang */}
     <h3 className="text-[20px] md:text-[24px] font-black text-[#111827] dark:text-[#FFFFFF] uppercase tracking-tighter leading-none truncate pointer-events-none mb-4 group-hover:text-[#ea580c] transition-colors">
       {item.projectName}
     </h3>
 
     <div className="mt-auto pt-4 border-t-[3px] border-[#111827]/10 dark:border-[#FFFFFF]/10 flex flex-col gap-1 pointer-events-none overflow-hidden">
       <span className="text-[10px] text-[#111827]/60 dark:text-[#FFFFFF]/60 font-black uppercase tracking-widest">ROLE</span>
-      {/* truncate melindungi teks role yang terlalu panjang */}
       <span className="text-[12px] md:text-[14px] font-bold text-[#111827] dark:text-[#FFFFFF] uppercase tracking-tight truncate">
         {item.role}
       </span>
