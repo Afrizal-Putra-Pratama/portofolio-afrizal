@@ -10,7 +10,7 @@ const greetings = [
   "Ciao",
   "Hola",
   "Halo",
-  "Welcome!" // Diubah menjadi "Welcome!"
+  "Welcome!" 
 ];
 
 export default function Preloader() {
@@ -26,29 +26,27 @@ export default function Preloader() {
     }
   }, [phase]);
 
+  // ==========================================
+  // LOGIKA 1: PENGECEKAN RENTANG WAKTU (30 MENIT)
+  // ==========================================
   useEffect(() => {
-    // =========================================================================
-    // TIPS DEV: Tetap jadikan komentar baris ini selama testing.
-    // Jika web sudah siap rilis, hapus tanda komentar (//) di 6 baris bawah ini.
-    // =========================================================================
-    // const hasLoaded = sessionStorage.getItem("preloader_shown");
-    // if (hasLoaded) {
-    //   setPhase("done");
-    //   setTimeout(() => window.dispatchEvent(new Event("preloaderDone")), 100);
-    //   return;
-    // }
+    const expiry = localStorage.getItem("preloader_expiry");
+    const now = new Date().getTime();
+    
+    // Jika waktu saat ini masih KURANG DARI waktu kedaluwarsa, SKIP preloader
+    if (expiry && now < parseInt(expiry)) {
+      setPhase("done");
+      setTimeout(() => window.dispatchEvent(new Event("preloaderDone")), 100);
+      return;
+    }
 
     if (phase === "loading") {
       if (currentIndex < greetings.length - 1) {
-        
-        // Kecepatan diubah tepat menjadi 730ms
         const timer = setTimeout(() => {
           setCurrentIndex((prev) => prev + 1);
         }, 730); 
-
         return () => clearTimeout(timer);
       } else {
-        // Tahan kata "Welcome!" selama 1.2 detik sebelum pintu membelah
         const holdTimer = setTimeout(() => {
           setPhase("exiting");
         }, 1200);
@@ -57,17 +55,22 @@ export default function Preloader() {
     }
   }, [currentIndex, phase]);
 
+  // ==========================================
+  // LOGIKA 2: SETTING WAKTU KEDALUWARSA & EXIT
+  // ==========================================
   useEffect(() => {
     if (phase === "exiting") {
-      // TERIAKKAN ABA-ABA "ACTION!" KE HERO TEPAT SAAT PINTU TERBELAH
+      // Aba-aba ke komponen lain (seperti Hero GSAP)
       window.dispatchEvent(new Event("preloaderDone"));
 
-      // Waktu pintu terbelah adalah 1 detik (1000ms)
       const splitTimer = setTimeout(() => {
         setPhase("done");
-        // sessionStorage.setItem("preloader_shown", "true"); 
         
-        // REFRESH SCROLLTRIGGER AGAR POSISI SCROLL TIDAK BERANTAKAN
+        // Set waktu 30 menit ke depan (30 menit * 60 detik * 1000 milidetik)
+        const expiryTime = new Date().getTime() + 30 * 60 * 1000;
+        localStorage.setItem("preloader_expiry", expiryTime.toString());
+        
+        // Refresh ScrollTrigger agar animasi posisi tidak berantakan
         window.dispatchEvent(new Event("resize")); 
       }, 1000); 
       return () => clearTimeout(splitTimer);
@@ -79,9 +82,7 @@ export default function Preloader() {
   return (
     <div className={`fixed inset-0 z-[99999] flex ${phase === "loading" ? "pointer-events-auto" : "pointer-events-none"}`}>
       
-      {/* =========================================
-          PANEL 1: Atas (Mobile) / Kiri (Desktop)
-          ========================================= */}
+      {/* PANEL 1: Atas (Mobile) / Kiri (Desktop) */}
       <div 
         className={`absolute top-0 left-0 w-full h-1/2 md:w-1/2 md:h-full bg-[#000000] transition-all duration-[1000ms] ease-[cubic-bezier(0.76,0,0.24,1)] overflow-hidden ${
           phase === "exiting" 
@@ -98,9 +99,7 @@ export default function Preloader() {
         />
       </div>
 
-      {/* =========================================
-          PANEL 2: Bawah (Mobile) / Kanan (Desktop)
-          ========================================= */}
+      {/* PANEL 2: Bawah (Mobile) / Kanan (Desktop) */}
       <div 
         className={`absolute bottom-0 right-0 w-full h-1/2 md:w-1/2 md:h-full bg-[#000000] transition-all duration-[1000ms] ease-[cubic-bezier(0.76,0,0.24,1)] overflow-hidden ${
           phase === "exiting" 
@@ -117,9 +116,7 @@ export default function Preloader() {
         />
       </div>
 
-      {/* =========================================
-          WADAH TEKS
-          ========================================= */}
+      {/* WADAH TEKS */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <AnimatePresence mode="wait">
           {phase === "loading" && (
